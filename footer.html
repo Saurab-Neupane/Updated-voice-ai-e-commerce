@@ -1,0 +1,142 @@
+<footer class="main-footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>AIShop</h3>
+      <p style="color: rgba(255,255,255,0.6); line-height: 1.6;">
+        Your AI-powered shopping destination. Experience the future of e-commerce with voice commands and intelligent recommendations.
+      </p>
+      <div class="footer-social">
+        <button class="social-btn" onclick="window.open('https://twitter.com','_blank')" title="Twitter">𝕏</button>
+        <button class="social-btn" onclick="window.open('https://facebook.com','_blank')" title="Facebook">℉</button>
+        <button class="social-btn" onclick="window.open('https://instagram.com','_blank')" title="Instagram">📷</button>
+        <button class="social-btn" onclick="window.open('https://linkedin.com','_blank')" title="LinkedIn">🔗</button>
+      </div>
+    </div>
+
+    <div class="footer-section">
+      <h3>Shop</h3>
+      <ul>
+        <li><a href="products.html?category=electronics">Electronics</a></li>
+        <li><a href="products.html?category=fashion">Fashion</a></li>
+        <li><a href="products.html?category=shoes">Shoes</a></li>
+        <li><a href="products.html?category=bags">Bags</a></li>
+        <li><a href="products.html?category=home">Home & Living</a></li>
+        <li><a href="products.html?deals=true">Deals & Offers</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h3>Company</h3>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="#" onclick="alert('Careers page coming soon!'); return false;">Careers</a></li>
+        <li><a href="#" onclick="alert('Blog coming soon!'); return false;">Blog</a></li>
+        <li><a href="#" onclick="alert('Press page coming soon!'); return false;">Press</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h3>Support</h3>
+      <ul>
+        <li><a href="contact.html">Help Center</a></li>
+        <li><a href="shipping.html">Shipping Info</a></li>
+        <li><a href="pages/returns.html">Returns</a></li>
+        <li><a href="pages/track.html">Track Order</a></li>
+        <li><a href="pages/privacy.html">Privacy Policy</a></li>
+        <li><a href="pages/terms.html">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2025 AIShop. All rights reserved. Powered by AI.</p>
+  </div>
+</footer>
+
+<style>
+  .main-footer {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4rem 2rem 2rem;
+    margin-top: 4rem;
+  }
+
+  .footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-section h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .footer-section ul li {
+    margin-bottom: 0.75rem;
+  }
+
+  .footer-section ul li a {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-section ul li a:hover {
+    color: #3b82f6;
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .social-btn {
+    width: 45px;
+    height: 45px;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .social-btn:hover {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    transform: translateY(-3px);
+  }
+
+  .footer-bottom {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  @media (max-width: 768px) {
+    .footer-content {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

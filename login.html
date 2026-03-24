@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - AIShop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f172a;
+      min-height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+
+    .main-header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+      font-size: 1.75rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 600;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: white;
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+    }
+
+    .header-icon-btn {
+      position: relative;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 12px;
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .header-icon-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+    }
+
+    .header-icon-btn span {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ef4444;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 10px;
+      min-width: 20px;
+      text-align: center;
+      border: 2px solid #0f172a;
+    }
+
+    .login-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent 70%);
+      animation: pulse 8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 3rem;
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .login-header h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-header p {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1.125rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+    }
+
+    .forgot-password {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .forgot-password:hover {
+      color: #3b82f6;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1.125rem;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1.125rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 1.5rem;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.5);
+    }
+
+    .divider {
+      text-align: center;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .divider span {
+      background: rgba(30, 41, 59, 0.95);
+      padding: 0 1rem;
+      position: relative;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+    }
+
+    .oauth-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .oauth-btn {
+      padding: 1rem;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 12px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .oauth-btn:hover {
+      background: rgba(59, 130, 246, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .login-status {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      color: #34d399;
+      text-align: center;
+      display: none;
+    }
+
+    .login-status.show {
+      display: block;
+    }
+
+    .signup-link {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1rem;
+    }
+
+    .signup-link a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+
+    .signup-link a:hover {
+      color: #3b82f6;
+    }
+
+    .logout-section {
+      text-align: center;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logout-btn {
+      color: #ef4444;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      text-decoration: underline;
+    }
+
+    /* ======================================
+       COMPREHENSIVE RESPONSIVE DESIGN
+       ====================================== */
+    
+    .hamburger-menu {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 1001;
+    }
+    
+    .hamburger-menu span {
+      width: 25px;
+      height: 3px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    
+    .hamburger-menu.active span:nth-child(1) {
+      transform: rotate(45deg) translate(8px, 8px);
+    }
+    
+    .hamburger-menu.active span:nth-child(2) {
+      opacity: 0;
+    }
+    
+    .hamburger-menu.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -7px);
+    }
+    
+    .mobile-menu-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .mobile-menu-overlay.active {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .main-header {
+        padding: 0.875rem 1rem;
+      }
+      
+      .logo {
+        font-size: 1.5rem;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: 0;
+        transform: translateX(110%);
+        width: 280px;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 80px 30px 30px;
+        gap: 1.5rem;
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        overflow-y: auto;
+      }
+
+      .nav-links.active {
+        transform: translateX(0);
+      }
+      
+      .nav-links a {
+        font-size: 1.1rem;
+        padding: 12px 0;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      
+      .hamburger-menu {
+        display: flex;
+      }
+      
+      .mobile-menu-overlay {
+        display: block;
+      }
+
+      .header-icon-btn {
+        font-size: 0.8rem;
+        padding: 0.625rem 1rem;
+      }
+      
+      .page-header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .login-box {
+        padding: 2rem 1.5rem;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .page-header {
+        padding: 2rem 1rem 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        font-size: 1.35rem;
+      }
+      
+      .main-header {
+        padding: 0.75rem 0.875rem;
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .login-box {
+        padding: 1.5rem 1rem;
+      }
+      
+      .login-box h2 {
+        font-size: 1.5rem;
+      }
+      
+      .form-group label {
+        font-size: 0.95rem;
+      }
+      
+      .form-input {
+        font-size: 0.95rem;
+        padding: 0.75rem;
+      }
+
+      .chatbot-container {
+        width: 100vw;
+        height: 100vh;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+      }
+
+      #chatbotToggle {
+        width: 60px;
+        height: 60px;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+    
+    @media (max-width: 375px) {
+      .logo {
+        font-size: 1.2rem;
+      }
+      
+      .page-header h1 {
+        font-size: 1.75rem;
+      }
+      
+      .login-box {
+        padding: 1.25rem 0.875rem;
+      }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .chatbot-container {
+        height: 100vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+
+  <header class="main-header">
+    <div class="logo" onclick="window.location.href='index.html'">🛍️ AIShop</div>
+
+    <div class="hamburger-menu" id="hamburgerMenu" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="cart.html">Cart</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="header-icons">
+      <button class="header-icon-btn" id="themeToggle" onclick="cycleTheme()" title="Change Theme">
+        <span style="font-size: 1.5rem;">Theme</span>
+      </button>
+      
+      <button class="header-icon-btn" onclick="startVoice()" title="Voice AI">
+        Voice
+      </button>
+      <button class="header-icon-btn" onclick="toggleChatbot()" title="AI Chat">
+        Chat
+      </button>
+      <button class="header-icon-btn" onclick="window.location.href='wishlist.html'" title="Wishlist">
+        Wishlist <span id="wishlistCount">0</span>
+      </button>
+      <button class="header-icon-btn" onclick="window.location.href='cart.html'" title="Cart">
+        Cart <span id="cartCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="login-wrapper">
+    <div class="login-card">
+      <div class="login-header">
+        <h1> Welcome Back</h1>
+        <p>Sign in to continue your AI-powered shopping</p>
+      </div>
+
+      <div id="loginStatus" class="login-status"></div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input 
+            type="email" 
+            id="email" 
+            class="form-input" 
+            placeholder="you@example.com" 
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            class="form-input" 
+            placeholder="••••••••" 
+            minlength="6" 
+            required
+          />
+        </div>
+
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" id="rememberMe">
+            <span>Remember me</span>
+          </label>
+          <a href="#" class="forgot-password" onclick="handleForgotPassword(); return false;">
+            Forgot password?
+          </a>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          Sign In
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>OR CONTINUE WITH</span>
+      </div>
+
+      <div class="oauth-buttons">
+        <button class="oauth-btn" onclick="oauthLogin('Google')">
+          <span style="font-size: 1.5rem;">G</span> Google
+        </button>
+        <button class="oauth-btn" onclick="oauthLogin('Apple')">
+          <span style="font-size: 1.5rem;"></span> Apple
+        </button>
+      </div>
+
+      <div class="signup-link">
+        New to AIShop? <a href="#" onclick="handleSignup(); return false;">Create an account</a>
+      </div>
+
+      <div class="logout-section">
+        <button class="logout-btn" onclick="handleLogout()">
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </main>
+
+ 
+  <script src="theme-toggle.js"></script>
+  <script src="voice.js"></script>
+  <script src="chatbot.js"></script>
+
+  <script>
+    function updateCounts() {
+      const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      
+      const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+      
+      document.getElementById('cartCount').textContent = cartCount;
+      document.getElementById('wishlistCount').textContent = wishlist.length;
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const remember = document.getElementById('rememberMe').checked;
+
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showNotification(' Please enter a valid email address', 'error');
+        return;
+      }
+
+      if (password.length < 6) {
+        showNotification(' Password must be at least 6 characters', 'error');
+        return;
+      }
+
+      const token = 'tok_' + Math.random().toString(36).substr(2);
+      const user = {
+        email: email,
+        token: token,
+        remember: remember,
+        loggedInAt: Date.now()
+      };
+
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      const statusEl = document.getElementById('loginStatus');
+      statusEl.textContent = ` Signed in as ${email}`;
+      statusEl.classList.add('show');
+
+      showNotification(' Logged in successfully!', 'success');
+      setTimeout(() => {
+        const redirect = sessionStorage.getItem('postLoginRedirect') || 'index.html';
+        sessionStorage.removeItem('postLoginRedirect');
+        window.location.href = redirect;
+      }, 1500);
+    }
+
+    function oauthLogin(provider) {
+      showNotification(` Connecting to ${provider}...`, 'success');
+      
+    
+      setTimeout(() => {
+        const user = {
+          email: `user@${provider.toLowerCase()}.com`,
+          token: `oauth_${provider}_${Math.random().toString(36).substr(2)}`,
+          provider: provider,
+          remember: true,
+          loggedInAt: Date.now()
+        };
+
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        const statusEl = document.getElementById('loginStatus');
+        statusEl.textContent = ` Signed in with ${provider}`;
+        statusEl.classList.add('show');
+
+        showNotification(` Logged in with ${provider}!`, 'success');
+
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1500);
+      }, 800);
+    }
+    function handleForgotPassword() {
+      const email = prompt('Enter your email address:');
+      if (email) {
+        showNotification(` Password reset link sent to ${email}`, 'success');
+      }
+    }
+    function handleSignup() {
+      showNotification('🎉 Registration feature coming soon!', 'success'); 
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('user');
+      const statusEl = document.getElementById('loginStatus');
+      statusEl.textContent = '';
+      statusEl.classList.remove('show');
+      showNotification(' Signed out successfully', 'success');
+      document.getElementById('loginForm').reset();
+    }
+
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.textContent = message;
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? 'linear-gradient(135deg, #10b981, #059669)' : 'linear-gradient(135deg, #ef4444, #dc2626)'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        z-index: 10000;
+        animation: slideIn 0.3s ease-out;
+        font-weight: 600;
+      `;
+      
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes slideIn {
+          from { transform: translateX(400px); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
+    }
+
+    function checkLoginStatus() {
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      if (user && user.email) {
+        const statusEl = document.getElementById('loginStatus');
+        statusEl.textContent = ` Currently signed in as ${user.email}`;
+        statusEl.classList.add('show');
+      }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCounts();
+      checkLoginStatus();
+     
+    });
+
+    setInterval(updateCounts, 5000);
+
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const hamburger = document.getElementById('hamburgerMenu');
+      const overlay = document.getElementById('mobileMenuOverlay');
+      
+      navLinks.classList.toggle('active');
+      hamburger.classList.toggle('active');
+      overlay.classList.toggle('active');
+      
+      // Prevent body scroll when menu is open
+      document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+    }
+    
+    function closeMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const hamburger = document.getElementById('hamburgerMenu');
+      const overlay = document.getElementById('mobileMenuOverlay');
+      
+      navLinks.classList.remove('active');
+      hamburger.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    
+    // Close menu when clicking on a link
+    document.addEventListener('DOMContentLoaded', function() {
+      const navLinkElements = document.querySelectorAll('.nav-links a');
+      navLinkElements.forEach(link => {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Security - AIShop</title>
+  <meta name="description" content="Learn how AIShop protects your payments with encryption, secure checkout, and trusted transaction standards.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://aishop.com/security.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Payment Security - AIShop">
+  <meta property="og:description" content="Bank-level payment protection and secure checkout information for AIShop customers.">
+  <meta property="og:url" content="https://aishop.com/security.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0f172a">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f172a;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .main-header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+      font-size: 1.75rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+    }
+
+    .back-btn {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .back-btn:hover {
+      background: rgba(59, 130, 246, 0.2);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 1.5rem 2.5rem;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #10b981, #059669);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .content {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .security-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .security-card {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .security-card:hover {
+      border-color: rgba(16, 185, 129, 0.5);
+      transform: translateY(-10px);
+    }
+
+    .security-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .security-icon svg {
+      width: 1.8em;
+      height: 1.8em;
+    }
+
+    .security-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #10b981;
+    }
+
+    .security-card p {
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+    }
+
+    .payment-methods {
+      background: rgba(30, 41, 59, 0.3);
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .payment-methods h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: #60a5fa;
+    }
+
+    .payment-icons {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .main-header {
+        padding: 0.875rem 1rem;
+      }
+      
+      .logo {
+        font-size: 1.5rem;
+      }
+      
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .logo {
+        font-size: 1.35rem;
+      }
+      
+      .main-header {
+        padding: 0.75rem 0.875rem;
+      }
+      
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+      
+      .info-section h2 {
+        font-size: 1.5rem;
+      }
+    }
+    
+    @media (max-width: 375px) {
+      .logo {
+        font-size: 1.2rem;
+      }
+      
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="main-header">
+    <div class="logo" onclick="window.location.href='index.html'">🛍️ AIShop</div>
+    <button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
+  </header>
+
+  <div class="hero">
+    <h1>Bank-Level Security</h1>
+    <p>Your payment information is always protected</p>
+  </div>
+
+  <div class="content">
+    <div class="security-grid">
+      <div class="security-card">
+        <div class="security-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="6" y="10" width="12" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <path d="M9 10V8a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            <circle cx="12" cy="14" r="1.3" fill="none" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+        </div>
+        <h3>SSL Encryption</h3>
+        <p>All transactions are encrypted with 256-bit SSL technology</p>
+      </div>
+
+      <div class="security-card">
+        <div class="security-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 6l8-3 8 3v6a9 9 0 0 1-8 9 9 9 0 0 1-8-9z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+            <path d="M10 11.5l2 2 3.5-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+        </div>
+        <h3>PCI Compliant</h3>
+        <p>Certified Payment Card Industry Data Security Standard</p>
+      </div>
+
+      <div class="security-card">
+        <div class="security-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <path d="M9.5 12.5l1.5 1.5 3.5-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+        </div>
+        <h3>Verified Merchant</h3>
+        <p>Trusted by thousands of customers worldwide</p>
+      </div>
+
+      <div class="security-card">
+        <div class="security-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="5" y="7" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <path d="M9 16h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+        </div>
+        <h3>Secure Checkout</h3>
+        <p>Your card details are never stored on our servers</p>
+      </div>
+    </div>
+
+    <div class="payment-methods">
+      <h2>Accepted Payment Methods</h2>
+      <div class="payment-icons">
+        <span></span>
+        <span>🅿️</span>
+        <span>📲</span>
+        <span>🅖</span>
+        <span>₿</span>
+      </div>
+      <p style="margin-top: 2rem; color: rgba(255, 255, 255, 0.7);">
+        We accept all major credit cards, PayPal, Apple Pay, Google Pay, and cryptocurrency
+      </p>
+    </div>
+  </div>
+
+  <script src="chatbot.js"></script>
+</body>
+</html>

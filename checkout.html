@@ -1,0 +1,3121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Checkout - AIShop | Voice-Powered Payment</title>
+  <meta name="description" content="Complete your purchase with our secure, voice-powered checkout. Multiple payment options, free shipping over £50, and AI-assisted form filling for faster checkout.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://aishop.com/checkout.html">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="checkout.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    .chatbot-btn {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+      border: none;
+      color: white;
+      padding: 1rem 1.75rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 14px 36px rgba(99, 102, 241, 0.28);
+      transition: all 0.3s;
+      z-index: 9998;
+    }
+
+    .chatbot-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 16px 44px rgba(99, 102, 241, 0.38);
+    }
+
+    /* Chatbot Window */
+    .chatbot-window {
+      position: fixed;
+      bottom: 100px;
+      left: 30px;
+      width: 400px;
+      height: 600px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.95));
+      border-radius: 26px;
+      box-shadow: 0 28px 70px rgba(15, 23, 42, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      display: none;
+      flex-direction: column;
+      z-index: 9999;
+      overflow: hidden;
+      border: 1px solid rgba(99, 102, 241, 0.18);
+      backdrop-filter: blur(18px);
+    }
+
+    .chatbot-window.open {
+      display: flex;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .chatbot-header {
+      background: linear-gradient(135deg, rgba(96, 165, 250, 0.95), rgba(167, 139, 250, 0.95), rgba(244, 114, 182, 0.95));
+      color: white;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 12px 30px rgba(99, 102, 241, 0.22);
+    }
+
+    .chatbot-header h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .chatbot-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .chatbot-new-chat {
+      background: rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      height: 32px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      padding: 0 0.65rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 14px rgba(99, 102, 241, 0.2);
+      backdrop-filter: blur(6px);
+    }
+
+    .chatbot-new-chat:hover {
+      background: rgba(255, 255, 255, 0.32);
+      transform: translateY(-1px);
+    }
+
+    .chatbot-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      box-shadow: 0 6px 14px rgba(99, 102, 241, 0.2);
+    }
+
+    .chatbot-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+
+    .chatbot-messages {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(224, 231, 255, 0.6), transparent 45%),
+        radial-gradient(circle at 80% 0%, rgba(254, 202, 241, 0.5), transparent 40%),
+        linear-gradient(180deg, rgba(248, 250, 252, 0.95), rgba(255, 255, 255, 0.9));
+    }
+
+    .chat-message {
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .chat-message.bot {
+      justify-content: flex-start;
+    }
+
+    .chat-message.user {
+      justify-content: flex-end;
+    }
+
+    .message-bubble {
+      max-width: 75%;
+      padding: 0.875rem 1.25rem;
+      border-radius: 18px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .chat-message.bot .message-bubble {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.9));
+      color: #1e293b;
+      border: 1px solid rgba(99, 102, 241, 0.16);
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+    }
+
+    .chat-message.user .message-bubble {
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      color: white;
+      box-shadow: 0 10px 22px rgba(99, 102, 241, 0.2);
+    }
+
+    .chatbot-input {
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 1px solid rgba(99, 102, 241, 0.18);
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .chatbot-input input {
+      flex: 1;
+      padding: 0.875rem 1.25rem;
+      border: 2px solid rgba(148, 163, 184, 0.35);
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .chatbot-input input:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+    }
+
+    .chatbot-input button {
+      background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+      border: none;
+      color: white;
+      padding: 0.875rem 1.5rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.3s;
+      box-shadow: 0 10px 24px rgba(99, 102, 241, 0.25);
+    }
+
+    .chatbot-input button:hover {
+      transform: scale(1.05);
+    }
+
+    .voice-helper {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.1));
+      border: 2px solid rgba(37, 99, 235, 0.3);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .voice-helper-icon {
+      font-size: 3rem;
+    }
+
+    .voice-commands-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .voice-command-tag {
+      background: white;
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #2563eb;
+      border: 1px solid #e2e8f0;
+    }
+
+    .voice-filled {
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.05) !important;
+      animation: fillSuccess 0.5s ease-out;
+    }
+
+    @keyframes fillSuccess {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 0.875rem 1.25rem;
+      background: white;
+      border-radius: 18px;
+      border: 1px solid #e2e8f0;
+      width: fit-content;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: #94a3b8;
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-10px); }
+    }
+
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    .listening-active {
+      animation: pulse 1.5s infinite !important;
+    }
+
+
+    
+    .hamburger-menu {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 1001;
+    }
+    
+    .hamburger-menu span {
+      width: 25px;
+      height: 3px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    
+    .hamburger-menu.active span:nth-child(1) {
+      transform: rotate(45deg) translate(8px, 8px);
+    }
+    
+    .hamburger-menu.active span:nth-child(2) {
+      opacity: 0;
+    }
+    
+    .hamburger-menu.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -7px);
+    }
+    
+    .mobile-menu-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .mobile-menu-overlay.active {
+      opacity: 1;
+    }
+
+    @media (max-width: 1024px) {
+      .checkout-container {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-header {
+        padding: 0.875rem 1rem;
+      }
+      
+      .logo {
+        font-size: 1.5rem;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: 0;
+        transform: translateX(110%);
+        width: 280px;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 80px 30px 30px;
+        gap: 1.5rem;
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        overflow-y: auto;
+      }
+
+      .nav-links.active {
+        transform: translateX(0);
+      }
+      
+      .nav-links a {
+        font-size: 1.1rem;
+        padding: 12px 0;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      
+      .hamburger-menu {
+        display: flex;
+      }
+      
+      .mobile-menu-overlay {
+        display: block;
+      }
+
+      .header-icon-btn {
+        font-size: 0.8rem;
+        padding: 0.625rem 1rem;
+      }
+      
+      .page-header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .checkout-section h2 {
+        font-size: 1.5rem;
+      }
+      
+      .checkout-form, .order-summary {
+        padding: 2rem 1.5rem;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .page-header {
+        padding: 2rem 1rem 1.5rem;
+      }
+      
+      .payment-methods {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        font-size: 1.35rem;
+      }
+      
+      .main-header {
+        padding: 0.75rem 0.875rem;
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .checkout-section h2 {
+        font-size: 1.35rem;
+      }
+      
+      .checkout-form, .order-summary {
+        padding: 1.5rem 1rem;
+      }
+      
+      .form-group label {
+        font-size: 0.95rem;
+      }
+      
+      .form-input, .form-select {
+        font-size: 0.95rem;
+        padding: 0.75rem;
+      }
+
+      .chatbot-container {
+        width: 100vw;
+        height: 100vh;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+      }
+
+      #chatbotToggle {
+        width: 60px;
+        height: 60px;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+    
+    @media (max-width: 375px) {
+      .logo {
+        font-size: 1.2rem;
+      }
+      
+      .page-header h1 {
+        font-size: 1.75rem;
+      }
+      
+      .checkout-form, .order-summary {
+        padding: 1.25rem 0.875rem;
+      }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .chatbot-container {
+        height: 100vh;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+
+  <header class="main-header" style="
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 2rem;
+  ">
+    <div style="display: flex; align-items: center; gap: 2rem;">
+      <button onclick="goBack()" style="
+        background: #f1f5f9;
+        border: 2px solid #e2e8f0;
+        color: #1e293b;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s;
+      " onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
+        ← Back to Cart
+      </button>
+      
+      <div class="logo" onclick="window.location.href='index.html'" style="
+        font-size: 1.75rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #2563eb, #7c3aed, #db2777);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        cursor: pointer;
+        letter-spacing: -0.5px;
+      ">AIShop</div>
+
+      <div class="hamburger-menu" id="hamburgerMenu" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <div style="
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      color: #64748b;
+      font-weight: 600;
+    ">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span style="
+          width: 32px;
+          height: 32px;
+          background: linear-gradient(135deg, #10b981, #059669);
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 800;
+        ">✓</span>
+        <span>Cart</span>
+      </div>
+      <div style="width: 40px; height: 2px; background: #cbd5e1;"></div>
+      <div style="display: flex; align-items: center; gap: 0.5rem; color: #2563eb;">
+        <span style="
+          width: 32px;
+          height: 32px;
+          background: linear-gradient(135deg, #2563eb, #7c3aed);
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 800;
+        ">2</span>
+        <span>Checkout</span>
+      </div>
+      <div style="width: 40px; height: 2px; background: #e2e8f0;"></div>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span style="
+          width: 32px;
+          height: 32px;
+          background: #f1f5f9;
+          color: #94a3b8;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 800;
+        ">3</span>
+        <span>Complete</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="checkout-container">
+    
+    <div class="checkout-secure-banner" style="grid-column:1 / -1; margin-bottom:1rem; display:flex; align-items:center; gap:0.75rem; padding:0.9rem 1.2rem; border-radius:14px; background:linear-gradient(135deg,#ecfdf5,#e0f2fe); border:1px solid #a7f3d0; font-size:0.95rem; color:#047857;">
+      <span>Secure checkout</span>
+      <span style="color:#6b7280;">•</span>
+      <span>256-bit SSL encrypted payment</span>
+      <span style="color:#6b7280;">•</span>
+      <span>Free delivery on orders over <strong>£100</strong></span>
+    </div>
+    <div class="voice-helper checkout-voice-helper" style="grid-column: 1 / -1;">
+      <div class="voice-helper-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="9" y="4" width="6" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="1.6" />
+          <path d="M7 11v1a5 5 0 0 0 10 0v-1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div style="flex: 1;">
+        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.25rem; color: #1e40af; font-weight: 800;">
+          Voice & Chat Assistant Available
+        </h3>
+        <p style="margin: 0 0 0.75rem 0; color: #64748b; font-size: 0.95rem;">
+          Click the mic orb (bottom-right) for voice OR use chat (bottom-left):
+        </p>
+        <div class="voice-commands-list">
+          <span class="voice-command-tag"> "Fill form"</span>
+          <span class="voice-command-tag"> "What's my total?"</span>
+          <span class="voice-command-tag"> "Check my form"</span>
+          <span class="voice-command-tag"> "Set card number"</span>
+          <span class="voice-command-tag"> "Change payment to PayPal"</span>
+          <span class="voice-command-tag"> "Place order"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="checkout-form">
+      <form id="checkoutForm">
+        
+        <div class="form-section">
+          <h3>Contact Information</h3>
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required placeholder="neupane@example.com" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" required placeholder="+44 098765432" class="form-input">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Shipping Address</h3>
+          <div class="form-group">
+            <label for="fullName">Full Name *</label>
+            <input type="text" id="fullName" name="fullName" required placeholder="John Rai" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="address">Street Address *</label>
+            <input type="text" id="address" name="address" required placeholder="12 Saint Church, W55RF" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="apartment">Apartment/Suite</label>
+            <input type="text" id="apartment" name="apartment" placeholder="Apt 4B" class="form-input">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">City *</label>
+              <input type="text" id="city" name="city" required placeholder="London" class="form-input">
+            </div>
+            <div class="form-group">
+              <label for="state">State/Province *</label>
+              <input type="text" id="state" name="state" required placeholder="LDN" class="form-input">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="zipCode">ZIP/Postal Code *</label>
+              <input type="text" id="zipCode" name="zipCode" required placeholder="W55RF" class="form-input">
+            </div>
+            <div class="form-group">
+              <label for="country">Country *</label>
+              <select id="country" name="country" required class="form-input">
+                <option value="">Select Country</option>
+                <option value="US" selected>United States</option>
+                <option value="CA">Canada</option>
+                <option value="UK">United Kingdom</option>
+                <option value="AU">Australia</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Payment Method</h3>
+          <div class="payment-methods">
+            <div class="payment-method selected" data-method="card">
+              <div style="font-size: 2rem;"></div>
+              <p>Credit Card</p>
+            </div>
+            <div class="payment-method" data-method="paypal">
+              <div style="font-size: 2rem;">🅿️</div>
+              <p>PayPal</p>
+            </div>
+            <div class="payment-method" data-method="applepay">
+              <div style="font-size: 2rem;">📲</div>
+              <p>Apple Pay</p>
+            </div>
+            <div class="payment-method" data-method="googlepay">
+              <div style="font-size: 2rem;">🅖</div>
+              <p>Google Pay</p>
+            </div>
+          </div>
+
+          <div class="card-details-section">
+            <div class="form-group">
+              <label for="cardNumber">Card Number *</label>
+              <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" class="form-input">
+            </div>
+            <div class="form-group">
+              <label for="cardName">Cardholder Name *</label>
+              <input type="text" id="cardName" name="cardName" placeholder="Johnny Depth" class="form-input">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="expiry">Expiry Date *</label>
+                <input type="text" id="expiry" name="expiry" placeholder="MM/YY" maxlength="5" class="form-input">
+              </div>
+              <div class="form-group">
+                <label for="cvv">CVV *</label>
+                <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4" class="form-input">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="order-summary-container">
+      <div class="order-summary">
+        <h3> Order Summary</h3>
+        
+        <div class="checkout-items" id="checkoutItems"></div>
+
+        <div id="orderSummary"></div>
+
+        <button class="place-order-btn" id="placeOrderBtn">
+        Please Place Order 
+        </button>
+
+        <div style="
+          margin-top: 1.5rem;
+          padding: 1rem;
+          background: #f8fafc;
+          border-radius: 12px;
+          border: 2px solid #e2e8f0;
+          text-align: center;
+        ">
+          <div style="color: #64748b; font-size: 0.85rem; margin-bottom: 0.5rem;">
+            Secure Checkout
+          </div>
+          <div style="color: #94a3b8; font-size: 0.75rem; line-height: 1.5;">
+            Your payment information is encrypted and secure.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <button class="chatbot-btn" id="chatbotBtn">
+    <span style="font-size: 1.5rem;"></span>
+💬 </button>
+
+  <div class="chatbot-window" id="chatbotWindow">
+    <div class="chatbot-header">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div style="
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.25);
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          box-shadow: inset 0 0 12px rgba(255,255,255,0.4);
+        ">
+          <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" style="color:white;">
+            <rect x="9" y="3" width="6" height="12" rx="3" fill="currentColor"/>
+            <path d="M7 11v1a5 5 0 0 0 10 0v-1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            <path d="M12 18v3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div>
+          <h3 style="margin:0;font-size:1.1rem;font-weight:800;">Checkout Assistant</h3>
+          <div style="font-size:0.8rem;opacity:0.85;">Siri‑style guided checkout</div>
+        </div>
+      </div>
+      <div class="chatbot-header-actions">
+        <button class="chatbot-new-chat" id="chatbotNewChatBtn" title="Start new chat">New</button>
+        <button class="chatbot-close" id="chatbotClose">✕</button>
+      </div>
+    </div>
+
+    <div id="chatbotProgress" style="
+      padding: 0.75rem 1.5rem 0.65rem;
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+      display: none;
+    ">
+      <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.75rem;color:#64748b;font-weight:700;">
+        <span>Checkout progress</span>
+        <span id="chatbotProgressText">0 of 0</span>
+      </div>
+      <div style="
+        margin-top:0.45rem;
+        height:6px;
+        border-radius:999px;
+        background: rgba(99, 102, 241, 0.14);
+        overflow:hidden;
+      ">
+        <div id="chatbotProgressFill" style="
+          height:100%;
+          width:0%;
+          border-radius:999px;
+          background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+          transition: width 0.3s ease;
+        "></div>
+      </div>
+    </div>
+    
+    <div class="chatbot-messages" id="chatbotMessages">
+      <div class="chat-message bot">
+        <div class="message-bubble">
+          👋 Hi! I’m your checkout guide.<br><br>
+          I can guide you step by step or jump to any field you want.<br>
+          • Say “next” to follow the wizard<br>
+          • Say “set email to …” or “my city is …”<br>
+          • Ask for totals, shipping, or change payment<br><br>
+          Try: “Start checkout”, “Set card number”, or “Place order”.
+        </div>
+      </div>
+    </div>
+    
+    <div id="chatbotValidation" style="
+      margin: 0.75rem 1.5rem 0;
+      padding: 0.6rem 0.85rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #b45309;
+      background: rgba(251, 191, 36, 0.16);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      display: none;
+    "></div>
+
+    <div id="chatbotQuickActions" style="
+      display:flex;
+      gap:0.5rem;
+      padding: 0.75rem 1.5rem 0;
+      background: transparent;
+    ">
+      <button id="chatbotAutofillBtn" style="
+        flex: 1;
+        background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+        border: none;
+        color: white;
+        padding: 0.55rem 0.75rem;
+        border-radius: 10px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 10px 22px rgba(99, 102, 241, 0.22);
+        font-size: 0.8rem;
+      ">Autofill & Start</button>
+      <button id="chatbotValidateBtn" style="
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        color: #4f46e5;
+        padding: 0.55rem 0.75rem;
+        border-radius: 10px;
+        font-weight: 800;
+        cursor: pointer;
+        font-size: 0.8rem;
+        box-shadow: 0 8px 18px rgba(99, 102, 241, 0.08);
+      ">Validate</button>
+    </div>
+
+    <div class="chatbot-input">
+      <input type="text" id="chatInput" placeholder="Type your message..."/>
+      <button id="chatSend">Send</button>
+    </div>
+  </div>
+
+  <div id="siriContainer" style="
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+  ">
+ 
+    <button id="siriButton" style="
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 55%, #f472b6 100%);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      box-shadow: 0 12px 45px rgba(99, 102, 241, 0.35), 0 0 0 6px rgba(255, 255, 255, 0.75);
+      transition: all 0.3s ease;
+      position: relative;
+    " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+      <span class="siri-mic-icon" style="
+        width: 38px;
+        height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        filter: drop-shadow(0 6px 16px rgba(15, 23, 42, 0.25));
+      ">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="9" y="3" width="6" height="12" rx="3" fill="white" opacity="0.95"/>
+          <path d="M7 11v1a5 5 0 0 0 10 0v-1" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" />
+          <path d="M12 18v3" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </span>
+
+      <div id="pulseRing" style="
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 3px solid rgba(99, 102, 241, 0.9);
+        opacity: 0;
+        animation: none;
+      "></div>
+    </button>
+
+  
+    <div id="siriInterface" style="
+      position: absolute;
+      bottom: 100px;
+      right: 0;
+      width: 350px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      display: none;
+      border: 1px solid rgba(99, 102, 241, 0.25);
+    ">
+      <div style="text-align: center;">
+  
+        <div id="siriOrb" style="
+          width: 100px;
+          height: 100px;
+          margin: 0 auto 1.5rem;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 55%, #f472b6 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 3rem;
+          animation: gentlePulse 2s infinite;
+          box-shadow: 0 16px 40px rgba(99, 102, 241, 0.35), inset 0 0 22px rgba(255, 255, 255, 0.35);
+        "></div>
+
+        <h3 id="siriText" style="
+          margin: 0 0 1rem 0;
+          font-size: 1.25rem;
+          color: #1e293b;
+          font-weight: 800;
+        ">Tap to speak</h3>
+
+        <p style="
+          margin: 0;
+          font-size: 0.9rem;
+          color: #64748b;
+          line-height: 1.5;
+        ">Try: "Fill form", "What's my total?", "Set card number", "Change payment to PayPal", "Check my form", or "Place order"</p>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    .listening-active {
+      animation: pulse 1.5s infinite !important;
+    }
+  </style>
+
+  <script src="checkout.js"></script>
+  
+  <script>
+    function goBack() {
+      window.location.href = 'cart.html';
+    }
+    
+    let isListening = false;
+    let recognition;
+    let speechSynth = window.speechSynthesis;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let lastInputSource = 'chat';
+    let isBulkFill = false;
+    let isSpeakingResponse = false;
+    let pendingRecognitionRestart = false;
+    let recognitionRestartTimer = null;
+    let recognitionRestartAttempts = 0;
+    let lastProcessedVoiceCommand = '';
+    let lastProcessedVoiceAt = 0;
+    const checkoutWizard = { active: true };
+
+    const wizardSteps = [
+      { id: 'email', label: 'email address' },
+      { id: 'phone', label: 'phone number' },
+      { id: 'fullName', label: 'full name' },
+      { id: 'address', label: 'street address' },
+      { id: 'apartment', label: 'apartment or suite', optional: true },
+      { id: 'city', label: 'city' },
+      { id: 'state', label: 'state or province' },
+      { id: 'zipCode', label: 'postal code' },
+      { id: 'country', label: 'country' },
+      { id: 'cardNumber', label: 'card number', cardOnly: true },
+      { id: 'cardName', label: 'name on card', cardOnly: true },
+      { id: 'expiry', label: 'expiry date', cardOnly: true },
+      { id: 'cvv', label: 'security code', cardOnly: true }
+    ];
+
+    function normalizeVoiceCommand(text) {
+      return String(text || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function clearRecognitionRestartTimer() {
+      if (recognitionRestartTimer) {
+        clearTimeout(recognitionRestartTimer);
+        recognitionRestartTimer = null;
+      }
+    }
+
+    function safeStartRecognition(maxRetries = 4, delay = 180) {
+      if (!isListening || !recognition) return;
+      try {
+        recognition.start();
+        recognitionRestartAttempts = 0;
+      } catch (e) {
+        if (recognitionRestartAttempts >= maxRetries) return;
+        recognitionRestartAttempts += 1;
+        clearRecognitionRestartTimer();
+        recognitionRestartTimer = setTimeout(() => {
+          safeStartRecognition(maxRetries, delay);
+        }, delay);
+      }
+    }
+
+    function scheduleRecognitionRestart(delay = 220) {
+      clearRecognitionRestartTimer();
+      if (!isListening || !recognition) return;
+      recognitionRestartTimer = setTimeout(() => {
+        if (!isListening || isSpeakingResponse) return;
+        safeStartRecognition();
+      }, delay);
+    }
+
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+      recognition.maxAlternatives = 3;
+      recognition.onstart = () => {
+        recognitionRestartAttempts = 0;
+        updateSiriText('Listening...');
+      };
+
+      recognition.onresult = (event) => {
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        if (interimTranscript) {
+          updateSiriText(`Hearing: "${interimTranscript.trim()}"`);
+        }
+
+        if (finalTranscript) {
+          processVoiceCommand(finalTranscript.trim());
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Voice error:', event.error);
+        if (event.error === 'no-speech') {
+          updateSiriText('Listening...');
+          return;
+        } else if (event.error === 'aborted') {
+          return;
+        } else if (event.error === 'not-allowed') {
+          alert(' Microphone access denied. Please allow microphone access.');
+          stopListening();
+          return;
+        }
+        if (isListening) scheduleRecognitionRestart(260);
+      };
+
+      recognition.onend = () => {
+        if (!isListening) return;
+        if (isSpeakingResponse) {
+          pendingRecognitionRestart = true;
+          return;
+        }
+        scheduleRecognitionRestart(200);
+      };
+    } else {
+      console.warn('Voice recognition not supported');
+    }
+    document.getElementById('siriButton').addEventListener('click', () => {
+      if (isListening) {
+        stopListening();
+      } else {
+        startListening();
+      }
+    });
+
+    function startListening() {
+      if (!recognition) {
+        alert(' Voice recognition not supported in this browser. Try Chrome or Edge.');
+        return;
+      }
+
+      isListening = true;
+      pendingRecognitionRestart = false;
+      recognitionRestartAttempts = 0;
+      clearRecognitionRestartTimer();
+      if (speechSynth && speechSynth.cancel) {
+        try { speechSynth.cancel(); } catch (e) {}
+      }
+      safeStartRecognition();
+      if (speechSynth && speechSynth.resume) {
+        try { speechSynth.resume(); } catch (e) {}
+      }
+      
+   
+      document.getElementById('siriInterface').style.display = 'block';
+      document.getElementById('pulseRing').classList.add('listening-active');
+      document.getElementById('siriOrb').style.animation = 'pulse 1s infinite';
+      updateSiriText('Listening...');
+      promptNextWizardStep('voice');
+    }
+
+    function stopListening() {
+      isListening = false;
+      pendingRecognitionRestart = false;
+      clearRecognitionRestartTimer();
+      if (recognition) recognition.stop();
+      if (speechSynth && speechSynth.cancel) {
+        try { speechSynth.cancel(); } catch (e) {}
+      }
+
+      setTimeout(() => {
+        document.getElementById('siriInterface').style.display = 'none';
+        document.getElementById('pulseRing').classList.remove('listening-active');
+        document.getElementById('siriOrb').style.animation = 'gentlePulse 2s infinite';
+      }, 1000);
+      
+      console.log(' Voice deactivated');
+    }
+
+    function updateSiriText(text) {
+      document.getElementById('siriText').textContent = text;
+    }
+
+    function speakResponse(text, onDone = null) {
+      const safeText = String(text || '').trim();
+      if (!safeText) {
+        if (typeof onDone === 'function') onDone();
+        return;
+      }
+
+      if (chatbotOpen && typeof addMessage === 'function') {
+        addMessage(safeText, 'bot');
+      }
+
+      if (!speechSynth) {
+        if (isListening) scheduleRecognitionRestart(180);
+        if (typeof onDone === 'function') onDone();
+        return;
+      }
+
+      isSpeakingResponse = true;
+      pendingRecognitionRestart = pendingRecognitionRestart || isListening;
+
+      if (recognition && isListening) {
+        try { recognition.stop(); } catch (e) {}
+      }
+
+      speechSynth.cancel();
+      if (speechSynth.resume) {
+        try { speechSynth.resume(); } catch (e) {}
+      }
+      const utterance = new SpeechSynthesisUtterance(safeText);
+      utterance.rate = 1.1;
+      utterance.pitch = 1;
+
+      const finishSpeaking = () => {
+        isSpeakingResponse = false;
+        if (isListening && pendingRecognitionRestart) {
+          pendingRecognitionRestart = false;
+          scheduleRecognitionRestart(180);
+        }
+        if (typeof onDone === 'function') onDone();
+      };
+
+      utterance.onend = finishSpeaking;
+      utterance.onerror = finishSpeaking;
+      speechSynth.speak(utterance);
+    }
+
+    function getSelectedPaymentMethod() {
+      const selected = document.querySelector('.payment-method.selected');
+      return selected ? selected.dataset.method : 'card';
+    }
+
+    function isStepRequired(step) {
+      if (step.optional) return false;
+      if (step.cardOnly && getSelectedPaymentMethod() !== 'card') return false;
+      return true;
+    }
+
+    function fieldHasValue(fieldId) {
+      const field = document.getElementById(fieldId);
+      if (!field) return true;
+      return Boolean(field.value && field.value.trim());
+    }
+
+    function getNextWizardStep() {
+      return wizardSteps.find(step => isStepRequired(step) && !fieldHasValue(step.id)) || null;
+    }
+
+    function promptNextWizardStep(source = 'auto') {
+      if (!checkoutWizard.active) return;
+      const next = getNextWizardStep();
+      if (!next) {
+        const done = 'All required fields look filled. You can place your order when you are ready.';
+        if (source === 'voice') {
+          updateSiriText('All set!');
+          speakResponse(done);
+        } else if (source === 'chat') {
+          addMessage(done, 'bot');
+        } else if (isListening) {
+          updateSiriText('All set!');
+          speakResponse(done);
+        } else if (chatbotOpen) {
+          addMessage(done, 'bot');
+        }
+        if (chatbotOpen) {
+          showChatValidation('All required fields look filled. You can place your order.');
+          updateChatbotProgress();
+        }
+        return;
+      }
+
+      const msg = `Next, please provide your ${next.label}.`;
+      if (source === 'voice') {
+        updateSiriText(msg);
+        speakResponse(msg);
+      } else if (source === 'chat') {
+        addMessage(msg, 'bot');
+      } else if (isListening) {
+        updateSiriText(msg);
+        speakResponse(msg);
+      } else if (chatbotOpen) {
+        addMessage(msg, 'bot');
+      }
+      if (chatbotOpen) {
+        const missing = getMissingRequiredFields();
+        showChatValidation(missing.length ? 'Missing: ' + missing.slice(0, 6).join(', ') : '');
+        updateChatbotProgress();
+      }
+    }
+
+    function updateChatbotProgress() {
+      const progressEl = document.getElementById('chatbotProgress');
+      const progressText = document.getElementById('chatbotProgressText');
+      const progressFill = document.getElementById('chatbotProgressFill');
+      if (!progressEl || !progressText || !progressFill) return;
+
+      const requiredSteps = wizardSteps.filter(step => isStepRequired(step));
+      const total = requiredSteps.length;
+      const completed = requiredSteps.filter(step => fieldHasValue(step.id)).length;
+      const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+      progressText.textContent = `${completed} of ${total}`;
+      progressFill.style.width = `${pct}%`;
+      progressEl.style.display = chatbotOpen ? 'block' : 'none';
+    }
+
+    function showChatValidation(message) {
+      const validationEl = document.getElementById('chatbotValidation');
+      if (!validationEl) return;
+      if (!message) {
+        validationEl.style.display = 'none';
+        return;
+      }
+      validationEl.textContent = message;
+      validationEl.style.display = 'block';
+    }
+
+    const digitWords = {
+      zero: '0',
+      one: '1',
+      two: '2',
+      three: '3',
+      four: '4',
+      five: '5',
+      six: '6',
+      seven: '7',
+      eight: '8',
+      nine: '9'
+    };
+
+    function extractDigits(text) {
+      if (!text) return '';
+      const numeric = (text.match(/\d/g) || []).join('');
+      if (numeric.length) return numeric;
+      const words = text.toLowerCase().match(/\b(zero|one|two|three|four|five|six|seven|eight|nine)\b/g);
+      if (!words) return '';
+      return words.map(w => digitWords[w]).join('');
+    }
+
+    function formatCardNumber(digits) {
+      const trimmed = (digits || '').replace(/\D/g, '').slice(0, 19);
+      return trimmed.replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    function normalizeExpiry(text) {
+      if (!text) return '';
+      const match = text.match(/(\d{1,2})\s*[/\- ]\s*(\d{2,4})/);
+      if (match) {
+        const mm = match[1].padStart(2, '0').slice(0, 2);
+        const yy = match[2].slice(-2);
+        return `${mm}/${yy}`;
+      }
+      const digits = extractDigits(text);
+      if (digits.length >= 4) {
+        const mm = digits.slice(0, 2);
+        const yy = digits.slice(2, 4);
+        return `${mm}/${yy}`;
+      }
+      return '';
+    }
+
+    function normalizeCountry(input) {
+      const val = (input || '').toLowerCase().trim();
+      const map = {
+        'united states': 'US',
+        'united states of america': 'US',
+        'usa': 'US',
+        'us': 'US',
+        'america': 'US',
+        'canada': 'CA',
+        'uk': 'UK',
+        'united kingdom': 'UK',
+        'britain': 'UK',
+        'england': 'UK',
+        'australia': 'AU',
+        'au': 'AU'
+      };
+      return map[val] || input;
+    }
+
+    const checkoutFieldAliasesNlp = {
+      email: ['email', 'e-mail', 'mail', 'email address'],
+      phone: ['phone', 'mobile', 'telephone', 'contact number', 'phone number'],
+      fullName: ['full name', 'name', 'customer name', 'your name'],
+      address: ['address', 'street', 'street address', 'shipping address', 'delivery address'],
+      apartment: ['apartment', 'apt', 'suite', 'unit', 'flat'],
+      city: ['city', 'town'],
+      state: ['state', 'province', 'region', 'county'],
+      zipCode: ['zip', 'zip code', 'postal code', 'postcode', 'post code'],
+      country: ['country', 'nation'],
+      cardNumber: ['card number', 'credit card number', 'debit card number', 'number on card'],
+      cardName: ['name on card', 'cardholder name', 'card name'],
+      expiry: ['expiry', 'expiration', 'expiry date', 'exp date', 'expiration date'],
+      cvv: ['cvv', 'cvc', 'security code', 'card code']
+    };
+
+    const checkoutIntentKeywords = {
+      stop: ['stop listening', 'stop voice', 'stop', 'cancel', 'exit', 'turn off', 'close voice', 'quiet'],
+      goBack: ['go back', 'back to cart', 'open cart', 'return to cart', 'cart page'],
+      nextStep: ['next', 'continue', 'whats next', 'what is next', 'start checkout', 'begin checkout', 'help me checkout'],
+      skipStep: ['skip', 'skip that', 'skip this'],
+      fillForm: ['fill form', 'autofill', 'auto fill', 'complete form', 'populate form', 'test data'],
+      clearForm: ['clear form', 'reset form', 'empty form', 'erase form', 'delete form'],
+      orderTotal: ['total', 'how much', 'grand total', 'order total', 'summary', 'overall'],
+      shipping: ['shipping', 'delivery', 'postage'],
+      itemCount: ['how many items', 'item count', 'items in order', 'how many'],
+      payment: ['payment', 'payment method', 'paypal', 'apple pay', 'google pay', 'gpay', 'credit card', 'debit card'],
+      validate: ['check form', 'validate form', 'verify form', 'review form', 'missing fields'],
+      placeOrder: ['place order', 'submit order', 'confirm order', 'complete payment', 'pay now', 'finish order'],
+      help: ['help', 'what can you do', 'commands', 'options'],
+      newChat: ['new chat', 'clear chat', 'reset chat', 'clear conversation', 'start over']
+    };
+
+    function normalizeSpeechText(input) {
+      return String(input || '')
+        .toLowerCase()
+        .replace(/\bwhat's\b/g, 'what is')
+        .replace(/\b(at)\b/g, '@')
+        .replace(/\b(dot)\b/g, '.')
+        .replace(/\b(slash|forward slash)\b/g, '/')
+        .replace(/\b(dash|hyphen)\b/g, '-')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function checkoutTokenSet(text) {
+      return new Set(
+        String(text || '')
+          .toLowerCase()
+          .split(/\W+/)
+          .filter(Boolean)
+      );
+    }
+
+    function checkoutSimilarity(a, b) {
+      const setA = checkoutTokenSet(a);
+      const setB = checkoutTokenSet(b);
+      if (!setA.size || !setB.size) return 0;
+      const intersection = [...setA].filter(token => setB.has(token)).length;
+      const union = setA.size + setB.size - intersection;
+      return union ? intersection / union : 0;
+    }
+
+    function scoreIntentByKeywords(text, keywords) {
+      let score = 0;
+      for (const kw of keywords) {
+        if (text.includes(kw)) {
+          score += kw.includes(' ') ? 1.2 : 0.7;
+        }
+      }
+      return score;
+    }
+
+    function detectCheckoutIntent(text) {
+      let bestIntent = null;
+      let bestScore = 0;
+
+      for (const [intent, keywords] of Object.entries(checkoutIntentKeywords)) {
+        const score = scoreIntentByKeywords(text, keywords);
+        if (score > bestScore) {
+          bestScore = score;
+          bestIntent = intent;
+        }
+      }
+
+      return { intent: bestIntent, score: bestScore };
+    }
+
+    function resolveCheckoutField(fieldPhrase) {
+      const phrase = normalizeSpeechText(fieldPhrase);
+      if (!phrase) return null;
+
+      let best = { id: null, score: 0 };
+      for (const [fieldId, aliases] of Object.entries(checkoutFieldAliasesNlp)) {
+        for (const alias of aliases) {
+          const aliasNorm = normalizeSpeechText(alias);
+          let score = checkoutSimilarity(aliasNorm, phrase);
+          if (phrase.includes(aliasNorm) || aliasNorm.includes(phrase)) score += 0.7;
+          if (score > best.score) best = { id: fieldId, score };
+        }
+      }
+
+      return best.score >= 0.35 ? best.id : null;
+    }
+
+    function parseEmailFromUtterance(text) {
+      const normalized = normalizeSpeechText(text)
+        .replace(/\s*@\s*/g, '@')
+        .replace(/\s*\.\s*/g, '.')
+        .replace(/\s+/g, '');
+      const match = normalized.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i);
+      return match ? match[0] : '';
+    }
+
+    function toTitleCase(value) {
+      return String(value || '')
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+        .join(' ');
+    }
+
+    function normalizeFieldValue(fieldId, rawValue, originalCommand) {
+      const raw = String(rawValue || '').trim();
+      const fallback = String(originalCommand || '').trim();
+
+      if (fieldId === 'email') {
+        return parseEmailFromUtterance(raw || fallback);
+      }
+      if (fieldId === 'phone') {
+        const direct = raw.match(/[\d\s\-\+\(\)]{8,}/);
+        if (direct) return direct[0].trim();
+        const digits = extractDigits(raw || fallback);
+        return digits.length >= 8 ? digits : '';
+      }
+      if (fieldId === 'cardNumber') {
+        const digits = extractDigits(raw || fallback);
+        return digits.length >= 12 ? formatCardNumber(digits) : '';
+      }
+      if (fieldId === 'expiry') {
+        return normalizeExpiry(raw || fallback);
+      }
+      if (fieldId === 'cvv') {
+        const digits = extractDigits(raw || fallback);
+        return digits.length >= 3 ? digits.slice(0, 4) : '';
+      }
+      if (fieldId === 'zipCode') {
+        const zipped = raw.match(/[A-Za-z0-9 ]{3,10}/);
+        return zipped ? zipped[0].trim().toUpperCase() : '';
+      }
+      if (fieldId === 'country') {
+        return normalizeCountry(raw || fallback);
+      }
+      if (fieldId === 'fullName' || fieldId === 'cardName' || fieldId === 'city') {
+        return toTitleCase(raw);
+      }
+      if (fieldId === 'state') {
+        const value = raw.trim();
+        if (value.length <= 3) return value.toUpperCase();
+        return toTitleCase(value);
+      }
+
+      return raw;
+    }
+
+    function extractFieldCommandFromUtterance(original) {
+      const patterns = [
+        /(?:set|enter|type|put|fill|update|change)\s+(?:my\s+)?(.+?)\s+(?:to|as|is|with)\s+(.+)/i,
+        /(?:my\s+)?(.+?)\s+(?:is|should be|equals)\s+(.+)/i,
+        /(?:for\s+)?(.+?)\s+(?:use)\s+(.+)/i
+      ];
+
+      for (const pattern of patterns) {
+        const match = original.match(pattern);
+        if (!match || !match[1] || !match[2]) continue;
+        const fieldId = resolveCheckoutField(match[1]);
+        if (!fieldId) continue;
+        const value = normalizeFieldValue(fieldId, match[2], original);
+        if (!value) continue;
+        return { fieldId, value };
+      }
+
+      return null;
+    }
+
+    function escapeRegex(input) {
+      return String(input || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function extractFieldByAliasMention(original) {
+      const candidates = [];
+      Object.entries(checkoutFieldAliasesNlp).forEach(([fieldId, aliases]) => {
+        aliases.forEach(alias => {
+          candidates.push({ fieldId, alias });
+        });
+      });
+
+      candidates.sort((a, b) => b.alias.length - a.alias.length);
+
+      for (const candidate of candidates) {
+        const alias = candidate.alias;
+        const escapedAlias = escapeRegex(alias);
+
+        const directPattern = new RegExp(
+          `(?:my\\s+)?${escapedAlias}\\s*(?:to|is|as|equals|should be)?\\s+(.+)$`,
+          'i'
+        );
+        const reversePattern = new RegExp(
+          `(?:set|change|update|use|put|enter|type|fill)\\s+(.+?)\\s+(?:for|as|into|in)\\s+(?:my\\s+)?${escapedAlias}\\b`,
+          'i'
+        );
+
+        const directMatch = original.match(directPattern);
+        if (directMatch && directMatch[1]) {
+          const value = normalizeFieldValue(candidate.fieldId, directMatch[1], original);
+          if (value) return { fieldId: candidate.fieldId, value };
+        }
+
+        const reverseMatch = original.match(reversePattern);
+        if (reverseMatch && reverseMatch[1]) {
+          const value = normalizeFieldValue(candidate.fieldId, reverseMatch[1], original);
+          if (value) return { fieldId: candidate.fieldId, value };
+        }
+      }
+
+      return null;
+    }
+
+    function detectPaymentMethodFromText(text) {
+      if (/paypal/.test(text)) return 'paypal';
+      if (/apple\s*pay/.test(text)) return 'applepay';
+      if (/google\s*pay|gpay/.test(text)) return 'googlepay';
+      if (/card|credit|debit/.test(text)) return 'card';
+      return null;
+    }
+
+    function handleCheckoutNlpCommand(original) {
+      const normalized = normalizeSpeechText(original);
+      if (!normalized) return { handled: false };
+
+      const fieldCommand = extractFieldCommandFromUtterance(original) || extractFieldByAliasMention(original);
+      if (fieldCommand) {
+        setField(fieldCommand.fieldId, fieldCommand.value);
+        return {
+          handled: true,
+          siriText: `${checkoutFieldAliasesNlp[fieldCommand.fieldId][0]} set`,
+          response: `${checkoutFieldAliasesNlp[fieldCommand.fieldId][0]} saved.`
+        };
+      }
+
+      const { intent, score } = detectCheckoutIntent(normalized);
+      if (!intent || score < 0.9) return { handled: false };
+
+      if (intent === 'newChat') {
+        if (typeof clearCheckoutChatHistory === 'function') {
+          clearCheckoutChatHistory({ seedMessage: 'Started a new chat. How can I help with your checkout?' });
+        }
+        if (typeof showChatValidation === 'function') showChatValidation('');
+        return { handled: true, siriText: 'New chat started', response: 'Started a new chat. How can I help?' };
+      }
+
+      if (intent === 'stop') {
+        return { handled: true, siriText: 'Voice assistant off', stopListening: true };
+      }
+
+      if (intent === 'goBack') {
+        return {
+          handled: true,
+          siriText: 'Returning to cart',
+          response: 'Going back to your cart.',
+          actionAfterSpeech: () => { window.location.href = 'cart.html'; }
+        };
+      }
+
+      if (intent === 'nextStep') {
+        return { handled: true, action: () => promptNextWizardStep('voice') };
+      }
+
+      if (intent === 'skipStep') {
+        return { handled: true, action: () => promptNextWizardStep('voice') };
+      }
+
+      if (intent === 'fillForm') {
+        return {
+          handled: true,
+          siriText: 'Filling form',
+          response: 'Filling the form with test data.',
+          actionAfterSpeech: () => fillTestData()
+        };
+      }
+
+      if (intent === 'clearForm') {
+        return {
+          handled: true,
+          siriText: 'Clearing form',
+          response: 'Clearing your form now.',
+          actionAfterSpeech: () => clearForm()
+        };
+      }
+
+      if (intent === 'orderTotal') {
+        const totals = window.checkoutTotals;
+        if (totals) {
+          return {
+            handled: true,
+            siriText: 'Order total',
+            response: `You have ${totals.itemCount} items. Your total is £${totals.total.toFixed(2)}, including £${totals.tax.toFixed(2)} tax and ${totals.shipping === 0 ? 'free shipping' : '£' + totals.shipping.toFixed(2) + ' shipping'}.`
+          };
+        }
+        return { handled: true, siriText: 'Total unavailable', response: 'I could not find your order total yet.' };
+      }
+
+      if (intent === 'shipping') {
+        const totals = window.checkoutTotals;
+        if (totals) {
+          if (totals.shipping === 0) {
+            return { handled: true, siriText: 'Shipping: free', response: 'Shipping is free on this order.' };
+          }
+          const remaining = Math.max(0, (totals.freeShippingThreshold || 100) - totals.subtotal);
+          const extra = remaining > 0 ? ` Add £${remaining.toFixed(2)} more to unlock free shipping.` : '';
+          return {
+            handled: true,
+            siriText: 'Shipping details',
+            response: `Shipping is £${totals.shipping.toFixed(2)}.${extra}`
+          };
+        }
+        return { handled: true, siriText: 'Shipping unavailable', response: 'I could not read shipping details yet.' };
+      }
+
+      if (intent === 'itemCount') {
+        const totals = window.checkoutTotals;
+        if (totals) {
+          return { handled: true, siriText: 'Item count', response: `You currently have ${totals.itemCount} items in your order.` };
+        }
+        return { handled: true, siriText: 'Count unavailable', response: 'I could not read item count yet.' };
+      }
+
+      if (intent === 'payment') {
+        const paymentMethod = detectPaymentMethodFromText(normalized);
+        if (!paymentMethod) return { handled: false };
+        selectPaymentMethod(paymentMethod);
+        const map = {
+          paypal: 'PayPal',
+          applepay: 'Apple Pay',
+          googlepay: 'Google Pay',
+          card: 'card'
+        };
+        return {
+          handled: true,
+          siriText: `Payment: ${map[paymentMethod]}`,
+          response: `Payment method set to ${map[paymentMethod]}.`
+        };
+      }
+
+      if (intent === 'validate') {
+        const missing = getMissingRequiredFields();
+        if (!missing.length) {
+          if (typeof showChatValidation === 'function') showChatValidation('All required fields look filled. You can place your order.');
+          if (typeof updateChatbotProgress === 'function') updateChatbotProgress();
+          return {
+            handled: true,
+            siriText: 'All required fields filled',
+            response: 'All required fields look filled. You can place your order when ready.'
+          };
+        }
+        if (typeof showChatValidation === 'function') showChatValidation('Missing: ' + missing.slice(0, 6).join(', '));
+        if (typeof updateChatbotProgress === 'function') updateChatbotProgress();
+        return {
+          handled: true,
+          siriText: 'Missing fields found',
+          response: `You still need to fill: ${missing.slice(0, 5).join(', ')}.`
+        };
+      }
+
+      if (intent === 'placeOrder') {
+        return {
+          handled: true,
+          siriText: 'Placing order',
+          response: 'Placing your order now.',
+          actionAfterSpeech: () => document.getElementById('placeOrderBtn')?.click()
+        };
+      }
+
+      if (intent === 'help') {
+        return {
+          handled: true,
+          siriText: 'Available commands',
+          response: 'You can say: set email, set address, set card number, set expiry, check my form, what is my total, change payment to PayPal, or place order.'
+        };
+      }
+
+      return { handled: false };
+    }
+
+    function processVoiceCommand(command) {
+      const original = command;
+      const cmd = command.toLowerCase().trim();
+      const normalizedCmd = normalizeVoiceCommand(cmd);
+      const now = Date.now();
+      if (!normalizedCmd) return;
+      if (normalizedCmd === lastProcessedVoiceCommand && (now - lastProcessedVoiceAt) < 1800) {
+        return;
+      }
+      lastProcessedVoiceCommand = normalizedCmd;
+      lastProcessedVoiceAt = now;
+      lastInputSource = 'voice';
+      if (chatbotOpen && typeof addMessage === 'function') {
+        addMessage(command, 'user');
+      }
+
+      const nlpHandled = handleCheckoutNlpCommand(original);
+      if (nlpHandled && nlpHandled.handled) {
+        if (typeof nlpHandled.action === 'function') {
+          nlpHandled.action();
+        }
+        if (nlpHandled.siriText) {
+          updateSiriText(nlpHandled.siriText);
+        }
+        const runAfterResponse = () => {
+          if (typeof nlpHandled.actionAfterSpeech === 'function') {
+            nlpHandled.actionAfterSpeech();
+          }
+          if (nlpHandled.stopListening) {
+            stopListening();
+          }
+        };
+
+        if (nlpHandled.response) {
+          speakResponse(nlpHandled.response, runAfterResponse);
+        } else {
+          runAfterResponse();
+        }
+        return;
+      }
+  
+      if (/(stop listening|stop voice|stop|cancel|exit|turn off|close voice|quiet)/i.test(cmd)) {
+        updateSiriText('Voice assistant off');
+        speakResponse('Stopping voice assistant');
+        stopListening();
+        return;
+      }
+
+      if (/(go back|back to cart|open cart|return to cart|cart page)/i.test(cmd)) {
+        updateSiriText('Returning to cart');
+        speakResponse('Going back to your cart');
+        setTimeout(() => {
+          window.location.href = 'cart.html';
+        }, 400);
+        return;
+      }
+
+      if (/(next|continue|what'?s next|start checkout|begin checkout|help me checkout)/i.test(cmd)) {
+        promptNextWizardStep('voice');
+        return;
+      }
+
+      if (/(skip|skip that|skip this)/i.test(cmd)) {
+        promptNextWizardStep('voice');
+        return;
+      }
+
+
+      const fieldAliases = {
+        email: ['email', 'e-mail', 'mail'],
+        phone: ['phone', 'mobile', 'telephone', 'contact number', 'phone number'],
+        fullName: ['full name', 'name', 'your name', 'customer name'],
+        address: ['address', 'street', 'street address', 'road'],
+        apartment: ['apartment', 'apt', 'suite', 'unit', 'flat'],
+        city: ['city', 'town'],
+        state: ['state', 'province', 'region', 'county'],
+        zipCode: ['zip', 'zip code', 'postal', 'postal code', 'postcode'],
+        country: ['country', 'nation'],
+        cardNumber: ['card number', 'credit card number', 'debit card number', 'number on card'],
+        cardName: ['cardholder name', 'name on card', 'card name'],
+        expiry: ['expiry', 'expiration', 'exp date', 'expiry date', 'expiration date'],
+        cvv: ['cvv', 'cvc', 'security code', 'card code']
+      };
+
+      const genericMatch = original.match(/(?:set|enter|type|put|fill)\s+(.+?)\s+(?:to|is|as)\s+(.+)/i) ||
+        original.match(/(?:my )?(.+?)\s+(?:is|\'s)\s+(.+)/i);
+
+      if (genericMatch) {
+        const fieldPhrase = genericMatch[1].toLowerCase().trim();
+        const valuePhrase = genericMatch[2].trim();
+
+        const fieldId = Object.keys(fieldAliases).find(key =>
+          fieldAliases[key].some(alias => fieldPhrase.includes(alias))
+        );
+
+        if (fieldId) {
+          if (fieldId === 'cardNumber') {
+            const digits = extractDigits(valuePhrase);
+            if (digits && digits.length >= 12) {
+              setField('cardNumber', formatCardNumber(digits));
+              updateSiriText('Card number set');
+              speakResponse('Card number saved');
+              return;
+            }
+          }
+          if (fieldId === 'expiry') {
+            const expiryVal = normalizeExpiry(valuePhrase);
+            if (expiryVal) {
+              setField('expiry', expiryVal);
+              updateSiriText('Expiry set');
+              speakResponse('Expiry date saved');
+              return;
+            }
+          }
+          if (fieldId === 'cvv') {
+            const digits = extractDigits(valuePhrase);
+            if (digits && digits.length >= 3) {
+              setField('cvv', digits.slice(0, 4));
+              updateSiriText('CVV set');
+              speakResponse('Security code saved');
+              return;
+            }
+          }
+          if (fieldId === 'country') {
+            setField('country', normalizeCountry(valuePhrase));
+            updateSiriText('Country set');
+            speakResponse('Country saved');
+            return;
+          }
+
+          setField(fieldId, valuePhrase);
+          updateSiriText('Field set');
+          speakResponse('Saved');
+          return;
+        }
+      }
+
+      if (/fill|auto.?fill|complete|populate|test.?data/i.test(cmd)) {
+        updateSiriText(' Filling form');
+        speakResponse('Filling the form with test data');
+        setTimeout(() => {
+          fillTestData();
+          updateSiriText('Form filled! Continue speaking or click to stop.');
+        }, 500);
+        return;
+      }
+      if (/clear|reset|empty|erase|delete/i.test(cmd) && /form/i.test(cmd)) {
+        updateSiriText(' Clearing');
+        speakResponse('Clearing the form');
+        setTimeout(() => {
+          clearForm();
+          updateSiriText('Form cleared! Continue speaking.');
+        }, 500);
+        return;
+      }
+
+ 
+      if (/(place|submit|confirm|finish|checkout|complete|pay).*(order|purchase|payment)/i.test(cmd) || 
+          /(order|purchase|payment).*(place|submit|confirm|finish)/i.test(cmd)) {
+        updateSiriText(' Placing order');
+        speakResponse('Placing your order now');
+        setTimeout(() => {
+          document.getElementById('placeOrderBtn')?.click();
+          stopListening();
+        }, 500);
+        return;
+      }
+      if (/email|e-mail|mail/i.test(cmd)) {
+
+        const emailMatch = original.match(/[\w\.-]+@[\w\.-]+\.\w+/i);
+        if (emailMatch) {
+          updateSiriText(' Email set');
+          speakResponse('Email address saved');
+          setField('email', emailMatch[0]);
+          setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+          return;
+        }
+        
+        const spokenEmail = cmd
+          .replace(/\s+at\s+/g, '@')
+          .replace(/\s+dot\s+/g, '.')
+          .replace(/\s+/g, '');
+        
+        if (spokenEmail.includes('@') && spokenEmail.includes('.')) {
+          updateSiriText(' Email set');
+          speakResponse('Email saved');
+          setField('email', spokenEmail);
+          setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+          return;
+        }
+
+        const phrases = [
+          /(?:my )?email (?:is |address is )?(.+)/i,
+          /(?:set )?email (?:to )?(.+)/i,
+          /e-?mail.+?is (.+)/i
+        ];
+
+        for (const pattern of phrases) {
+          const match = cmd.match(pattern);
+          if (match && match[1]) {
+            let email = match[1].trim()
+              .replace(/\s+at\s+/g, '@')
+              .replace(/\s+dot\s+/g, '.')
+              .replace(/\s+/g, '');
+            updateSiriText(' Email set');
+            speakResponse('Email saved');
+            setField('email', email);
+            setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+            return;
+          }
+        }
+      }
+      if (/phone|number|mobile|telephone|contact/i.test(cmd)) {
+      
+        const phoneMatch = original.match(/[\d\s\-\+\(\)]{8,}/);
+        if (phoneMatch) {
+          updateSiriText(' Phone set');
+          speakResponse('Phone number saved');
+          setField('phone', phoneMatch[0].trim());
+          setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+          return;
+        }
+
+  
+        const patterns = [
+          /(?:my )?(?:phone|number|mobile) (?:is |number is )?(.+)/i,
+          /(?:set )?(?:phone|number) (?:to )?(.+)/i,
+          /call (?:me )?(?:at |on )?(.+)/i
+        ];
+
+        for (const pattern of patterns) {
+          const match = cmd.match(pattern);
+          if (match && match[1]) {
+            const phone = match[1].trim().replace(/\s+/g, '');
+            updateSiriText(' Phone set');
+            speakResponse('Phone number saved');
+            setField('phone', phone);
+            setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+            return;
+          }
+        }
+      }
+
+      if (/name|called|call me/i.test(cmd)) {
+        const patterns = [
+          /(?:my )?name (?:is |'s )?(.+)/i,
+          /(?:i'm |i am |im )(.+)/i,
+          /call me (.+)/i,
+          /(?:this is |it's )(.+)/i
+        ];
+
+        for (const pattern of patterns) {
+          const match = cmd.match(pattern);
+          if (match && match[1]) {
+         
+            let name = match[1].trim()
+              .replace(/\s+(and|the|my|is|a)\s+/gi, ' ')
+              .trim();
+            
+            if (name && name.length > 1) {
+          
+              name = name.split(' ').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+              ).join(' ');
+              
+              updateSiriText(' Name set');
+              speakResponse(`Got it, ${name.split(' ')[0]}`);
+              setField('fullName', name);
+              setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+              return;
+            }
+          }
+        }
+      }
+
+      if (/city|from|live in|based in/i.test(cmd)) {
+        const patterns = [
+          /(?:my )?city (?:is |'s )?(.+)/i,
+          /(?:i'm |i am )?from (.+)/i,
+          /live in (.+)/i,
+          /based in (.+)/i,
+          /in (?:the city of )?(.+)/i
+        ];
+
+        for (const pattern of patterns) {
+          const match = cmd.match(pattern);
+          if (match && match[1]) {
+            let city = match[1].trim()
+              .replace(/\s+(and|the|my|is|a|city)\s+/gi, ' ')
+              .trim();
+            
+            if (city && city.length > 1) {
+              city = city.split(' ').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+              ).join(' ');
+              
+              updateSiriText(' City set');
+              speakResponse('City saved');
+              setField('city', city);
+              setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+              return;
+            }
+          }
+        }
+      }
+
+      if (/state|province/i.test(cmd)) {
+        const patterns = [
+          /(?:my )?state (?:is |'s )?(.+)/i,
+          /(?:in )?(?:the state of )?(.+)/i,
+          /province (?:is |of )?(.+)/i
+        ];
+
+        for (const pattern of patterns) {
+          const match = cmd.match(pattern);
+          if (match && match[1]) {
+            let state = match[1].trim()
+              .replace(/\s+(and|the|my|is|a)\s+/gi, ' ')
+              .trim();
+            
+            if (state && state.length > 1) {
+              updateSiriText(' State set');
+              speakResponse('State saved');
+              setField('state', state.toUpperCase());
+              setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+              return;
+            }
+          }
+        }
+      }
+
+
+      if (/zip|postal|postcode|zip code|post code/i.test(cmd)) {
+        const zipMatch = original.match(/\b\d{5,6}\b/);
+        if (zipMatch) {
+          updateSiriText(' ZIP set');
+          speakResponse('ZIP code saved');
+          setField('zipCode', zipMatch[0]);
+          setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+          return;
+        }
+
+        const patterns = [
+          /zip (?:code )?(?:is )?(.+)/i,
+          /postal (?:code )?(?:is )?(.+)/i,
+          /postcode (?:is )?(.+)/i
+        ];
+
+        for (const pattern of patterns) {
+          const match = cmd.match(pattern);
+          if (match && match[1]) {
+            const zip = match[1].trim().replace(/\s+/g, '');
+            updateSiriText(' ZIP set');
+            speakResponse('ZIP code saved');
+            setField('zipCode', zip);
+            setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+            return;
+          }
+        }
+      }
+
+      if (/address|street|live at|located at/i.test(cmd)) {
+        const patterns = [
+          /(?:my )?address (?:is |'s )?(.+)/i,
+          /(?:i )?live (?:at |on )?(.+)/i,
+          /located (?:at |on )?(.+)/i,
+          /street (?:is |address is )?(.+)/i
+        ];
+
+        for (const pattern of patterns) {
+          const match = cmd.match(pattern);
+          if (match && match[1]) {
+            let address = match[1].trim()
+              .replace(/\s+(and|the|my)\s+/gi, ' ')
+              .trim();
+            
+            if (address && address.length > 3) {
+              updateSiriText(' Address set');
+              speakResponse('Address saved');
+              setField('address', address);
+              setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+              return;
+            }
+          }
+        }
+      }
+
+      if (/apartment|apt|suite|unit|flat/i.test(cmd)) {
+        const patterns = [
+          /(?:apartment|apt|suite|unit|flat) (?:is |number |no\.? |#|to )?(.+)/i,
+          /(?:my )?(?:apartment|apt|suite|unit|flat) (?:is |'s )?(.+)/i
+        ];
+        for (const pattern of patterns) {
+          const match = cmd.match(pattern);
+          if (match && match[1]) {
+            const apt = match[1].trim();
+            if (apt) {
+              updateSiriText('Apartment set');
+              speakResponse('Apartment or suite saved');
+              setField('apartment', apt);
+              setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+              return;
+            }
+          }
+        }
+      }
+
+      if (/country|nation/i.test(cmd)) {
+        const patterns = [
+          /(?:my )?country (?:is |'s )?(.+)/i,
+          /set country (?:to )?(.+)/i,
+          /country (?:to |is )?(.+)/i
+        ];
+        for (const pattern of patterns) {
+          const match = cmd.match(pattern);
+          if (match && match[1]) {
+            const countryInput = normalizeCountry(match[1].trim());
+            updateSiriText('Country set');
+            speakResponse('Country saved');
+            setField('country', countryInput);
+            setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+            return;
+          }
+        }
+      }
+      // Order summary and totals
+      if (/(total|how much|grand total|order total)/i.test(cmd)) {
+        const totals = window.checkoutTotals;
+        if (totals) {
+          const message = `Your order total is £${totals.total.toFixed(2)}, including £${totals.shipping.toFixed(2)} shipping and £${totals.tax.toFixed(2)} tax for ${totals.itemCount} items.`;
+          updateSiriText('Order total shared');
+          speakResponse(message);
+        } else {
+          updateSiriText('Total not ready');
+          speakResponse('I could not find your order total yet. Make sure your cart is loaded.');
+        }
+        return;
+      }
+
+      // Shipping details
+      if (/shipping|delivery/i.test(cmd)) {
+        const totals = window.checkoutTotals;
+        if (totals) {
+          if (totals.shipping === 0) {
+            updateSiriText('Shipping: FREE');
+            speakResponse('You have free shipping on this order.');
+          } else {
+            const remaining = Math.max(0, (totals.freeShippingThreshold || 100) - totals.subtotal);
+            const extra = remaining > 0 ? ` Add £${remaining.toFixed(2)} more to unlock free shipping.` : '';
+            updateSiriText('Shipping details shared');
+            speakResponse(`Your shipping cost is £${totals.shipping.toFixed(2)}.${extra}`);
+          }
+        } else {
+          updateSiriText('Shipping not ready');
+          speakResponse('I could not find your shipping details yet.');
+        }
+        return;
+      }
+
+      // Items count
+      if (/items|how many|cart|order summary/i.test(cmd)) {
+        const totals = window.checkoutTotals;
+        if (totals) {
+          updateSiriText('Order summary shared');
+          speakResponse(`You have ${totals.itemCount} items in your order. The current total is £${totals.total.toFixed(2)}.`);
+        } else {
+          updateSiriText('Summary not ready');
+          speakResponse('I could not read your order summary yet.');
+        }
+        return;
+      }
+
+      // Card details
+      if (/(card number|credit card number|debit card number|number on card|card is|card digits|card numbers)/i.test(cmd)) {
+        const digits = extractDigits(original);
+        if (digits && digits.length >= 12) {
+          const formatted = formatCardNumber(digits);
+          updateSiriText('Card number set');
+          speakResponse('Card number saved');
+          setField('cardNumber', formatted);
+          setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+          return;
+        }
+      }
+
+      if (/(name on card|cardholder name|card name)/i.test(cmd)) {
+        const match = original.match(/(?:name on card|cardholder name|card name) (?:is |to )?(.+)/i);
+        if (match && match[1]) {
+          const cardName = match[1].trim();
+          updateSiriText('Card name set');
+          speakResponse('Cardholder name saved');
+          setField('cardName', cardName);
+          setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+          return;
+        }
+      }
+
+      if (/(expiry|expiration|exp date|expiry date|expiration date)/i.test(cmd)) {
+        const expiry = normalizeExpiry(original);
+        if (expiry) {
+          updateSiriText('Expiry set');
+          speakResponse('Expiry date saved');
+          setField('expiry', expiry);
+          setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+          return;
+        }
+      }
+
+      if (/(cvv|cvc|security code|card code)/i.test(cmd)) {
+        const digits = extractDigits(original);
+        if (digits && digits.length >= 3) {
+          const cvv = digits.slice(0, 4);
+          updateSiriText('CVV set');
+          speakResponse('Security code saved');
+          setField('cvv', cvv);
+          setTimeout(() => updateSiriText('Continue speaking...'), 1000);
+          return;
+        }
+      }
+
+      // Payment method selection
+      if (/payment|pay ?method|card|paypal|apple pay|google pay/i.test(cmd)) {
+        if (/paypal/i.test(cmd)) {
+          selectPaymentMethod('paypal');
+          updateSiriText('Payment set to PayPal');
+          speakResponse('Payment method set to PayPal.');
+          return;
+        }
+        if (/apple ?pay/i.test(cmd)) {
+          selectPaymentMethod('applepay');
+          updateSiriText('Payment set to Apple Pay');
+          speakResponse('Payment method set to Apple Pay.');
+          return;
+        }
+        if (/google ?pay|gpay/i.test(cmd)) {
+          selectPaymentMethod('googlepay');
+          updateSiriText('Payment set to Google Pay');
+          speakResponse('Payment method set to Google Pay.');
+          return;
+        }
+        if (/card|credit|debit/i.test(cmd)) {
+          selectPaymentMethod('card');
+          updateSiriText('Payment set to card');
+          speakResponse('Payment method set to card.');
+          return;
+        }
+      }
+
+      // Form validation / check
+      if (/(check|verify|validate|review)/i.test(cmd) && /(form|details|information|info|address|order)/i.test(cmd)) {
+        const missing = getMissingRequiredFields();
+        if (!missing.length) {
+          updateSiriText('All required fields filled');
+          speakResponse('All required required fields look filled. You can place your order when you are ready.');
+        } else {
+          const listText = missing.slice(0, 5).join(', ');
+          updateSiriText('Missing: ' + listText);
+          speakResponse(`You still need to fill: ${listText}.`);
+        }
+        return;
+      }
+      if (/help|what can|commands|options/i.test(cmd)) {
+        updateSiriText('Available commands');
+        speakResponse('You can say: fill form, set card number, set expiry, change payment to PayPal, what is my total, check my form, or place order. You can also say stop listening.');
+        return;
+      }
+
+      const chatFallback = (typeof processCheckoutChatCommand === 'function')
+        ? processCheckoutChatCommand(original)
+        : '';
+
+      if (chatFallback && !/I did not quite get that/i.test(chatFallback)) {
+        updateSiriText('Done');
+        speakResponse(chatFallback);
+        return;
+      }
+
+      updateSiriText('I did not catch that');
+      speakResponse('I did not catch that. You can say set email, set address, check my form, what is my total, or place order.');
+
+    }
+
+    function setField(fieldId, value) {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        if (field.tagName === 'SELECT') {
+          const valueText = String(value).toLowerCase();
+          const option = Array.from(field.options).find(opt =>
+            opt.value.toLowerCase() === valueText || opt.text.toLowerCase().includes(valueText)
+          );
+          field.value = option ? option.value : value;
+          field.dispatchEvent(new Event('change', { bubbles: true }));
+        } else {
+          field.value = value;
+          field.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        field.classList.add('voice-filled');
+        showNotification(` ${fieldId} set!`, 'success');
+        updateChatbotProgress();
+        if (!isBulkFill) {
+          if (lastInputSource === 'voice') {
+            const nextStep = getNextWizardStep();
+            updateSiriText(nextStep ? `Saved. ${nextStep.label} next.` : 'Saved. All required fields are filled.');
+          } else {
+            promptNextWizardStep(lastInputSource);
+          }
+        }
+      }
+    }
+
+    function fillTestData() {
+      isBulkFill = true;
+      const data = {
+        'email': 'neupane@example.com',
+        'phone': '+44 098765432',
+        'fullName': 'John Rai',
+        'address': '12 Saint Church, W55RF',
+        'apartment': 'Apt 4B',
+        'city': 'London',
+        'state': 'LDN',
+        'zipCode': 'W55RF',
+        'country': 'UK',
+        'cardNumber': '4242 4242 4242 4242',
+        'cardName': 'John Rai',
+        'expiry': '11/29',
+        'cvv': '123'
+      };
+
+      Object.entries(data).forEach(([id, value]) => setField(id, value));
+      isBulkFill = false;
+      promptNextWizardStep(lastInputSource);
+      showNotification(' Form auto-filled!', 'success');
+    }
+
+    function clearForm() {
+      ['email', 'phone', 'fullName', 'address', 'apartment', 'city', 'state', 'zipCode', 'country', 'cardNumber', 'cardName', 'expiry', 'cvv'].forEach(id => {
+        const field = document.getElementById(id);
+        if (field) {
+          field.value = '';
+          field.classList.remove('voice-filled');
+        }
+      });
+      promptNextWizardStep(lastInputSource);
+      showNotification(' Form cleared!', 'info');
+    }
+
+    function selectPaymentMethod(methodKey) {
+      const el = document.querySelector(`.payment-method[data-method="${methodKey}"]`);
+      if (el) {
+        el.click();
+      }
+    }
+
+    function getMissingRequiredFields() {
+      const form = document.getElementById('checkoutForm');
+      if (!form) return [];
+
+      const requiredFields = Array.from(form.querySelectorAll('[required]'));
+      const missing = [];
+
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          if (field.style) {
+            field.style.borderColor = '#ef4444';
+            field.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.1)';
+          }
+          const label = (field.labels && field.labels[0] && field.labels[0].innerText) || field.name || field.id;
+          if (label) {
+            missing.push(label.replace('*', '').trim());
+          }
+        } else if (field.style) {
+          field.style.borderColor = '#e2e8f0';
+          field.style.boxShadow = 'none';
+        }
+      });
+
+      return missing;
+    }
+
+    const CHECKOUT_CHAT_HISTORY_KEY = 'checkoutChatbotConversationHistory';
+    const MAX_CHECKOUT_CHAT_HISTORY = 100;
+    let checkoutChatHistory = loadCheckoutChatHistory();
+
+    function getCheckoutChatWelcomeMessage() {
+      return `👋 Hi! I’m your checkout guide.<br><br>
+          I can guide you step by step or jump to any field you want.<br>
+          • Say “next” to follow the wizard<br>
+          • Say “set email to …” or “my city is …”<br>
+          • Ask for totals, shipping, or change payment<br><br>
+          Try: “Start checkout”, “Set card number”, or “Place order”.`;
+    }
+
+    function loadCheckoutChatHistory() {
+      try {
+        if (!window.sessionStorage) return [];
+        const navEntry = (performance.getEntriesByType('navigation') || [])[0];
+        if (navEntry && navEntry.type === 'reload') {
+          window.sessionStorage.removeItem(CHECKOUT_CHAT_HISTORY_KEY);
+          return [];
+        }
+        const raw = window.sessionStorage.getItem(CHECKOUT_CHAT_HISTORY_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return [];
+        return parsed
+          .filter(item => item && (item.type === 'user' || item.type === 'bot') && typeof item.txt === 'string')
+          .slice(-MAX_CHECKOUT_CHAT_HISTORY);
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function persistCheckoutChatHistory() {
+      try {
+        if (!window.sessionStorage) return;
+        window.sessionStorage.setItem(
+          CHECKOUT_CHAT_HISTORY_KEY,
+          JSON.stringify(checkoutChatHistory.slice(-MAX_CHECKOUT_CHAT_HISTORY))
+        );
+      } catch (e) {}
+    }
+
+    function clearCheckoutChatHistory(options = {}) {
+      const seedMessage = typeof options.seedMessage === 'string'
+        ? options.seedMessage
+        : 'Started a new chat. I can help with your checkout details.';
+      checkoutChatHistory = [];
+      if (seedMessage) {
+        checkoutChatHistory.push({ type: 'bot', txt: seedMessage });
+      }
+      persistCheckoutChatHistory();
+      renderCheckoutChatHistory();
+      updateChatbotProgress();
+    }
+
+    function renderCheckoutChatHistory() {
+      const messagesDiv = document.getElementById('chatbotMessages');
+      if (!messagesDiv) return;
+      messagesDiv.innerHTML = '';
+
+      if (!checkoutChatHistory.length) {
+        checkoutChatHistory.push({ type: 'bot', txt: getCheckoutChatWelcomeMessage() });
+        persistCheckoutChatHistory();
+      }
+
+      checkoutChatHistory.forEach(entry => addMessage(entry.txt, entry.type, { persist: false }));
+    }
+
+    let chatbotOpen = false;
+    renderCheckoutChatHistory();
+
+    document.getElementById('chatbotBtn').addEventListener('click', () => {
+      chatbotOpen = !chatbotOpen;
+      document.getElementById('chatbotWindow').style.display = chatbotOpen ? 'flex' : 'none';
+      if (chatbotOpen) {
+        document.getElementById('chatInput').focus();
+        promptNextWizardStep('chat');
+        updateChatbotProgress();
+      }
+    });
+
+    document.getElementById('chatbotClose').addEventListener('click', () => {
+      chatbotOpen = false;
+      document.getElementById('chatbotWindow').style.display = 'none';
+      showChatValidation('');
+    });
+
+    document.getElementById('chatbotNewChatBtn')?.addEventListener('click', () => {
+      clearCheckoutChatHistory({ seedMessage: 'Started a new chat. How can I help with your checkout?' });
+      showChatValidation('');
+      showNotification('Started a new chat', 'info');
+    });
+
+    document.getElementById('chatbotAutofillBtn')?.addEventListener('click', () => {
+      lastInputSource = 'chat';
+      fillTestData();
+      addMessage('Autofill complete. I can guide you through anything missing or confirm your order.', 'bot');
+      updateChatbotProgress();
+    });
+
+    document.getElementById('chatbotValidateBtn')?.addEventListener('click', () => {
+      const missing = getMissingRequiredFields();
+      if (!missing.length) {
+        showChatValidation('All required fields look filled. You can place your order.');
+      } else {
+        showChatValidation('Missing: ' + missing.slice(0, 6).join(', '));
+      }
+      updateChatbotProgress();
+    });
+
+    document.getElementById('chatSend').addEventListener('click', sendMessage);
+    document.getElementById('chatInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      if (!message) return;
+
+      if (/(^|\b)(new chat|start new chat|clear chat|reset chat|clear conversation|start over|delete chat history)(\b|$)/i.test(message)) {
+        input.value = '';
+        clearCheckoutChatHistory({ seedMessage: 'Started a new chat. How can I help with your checkout?' });
+        showChatValidation('');
+        showNotification('Started a new chat', 'info');
+        return;
+      }
+
+      addMessage(message, 'user');
+      input.value = '';
+
+      setTimeout(() => {
+        const response = processCheckoutChatCommand(message);
+        addMessage(response, 'bot');
+      }, 500);
+    }
+
+    function processCheckoutChatCommand(message) {
+      const original = message;
+      const cmd = message.toLowerCase().trim();
+      lastInputSource = 'chat';
+
+      if (/(new chat|start new chat|clear chat|reset chat|clear conversation|start over|delete chat history)/i.test(cmd)) {
+        clearCheckoutChatHistory({ seedMessage: 'Started a new chat. How can I help with your checkout?' });
+        showChatValidation('');
+        return ' Started a new chat. I am ready whenever you are.';
+      }
+
+      if (/(stop listening|stop voice|stop|close chat|exit chat|hide chat)/i.test(cmd)) {
+        chatbotOpen = false;
+        document.getElementById('chatbotWindow').style.display = 'none';
+        showChatValidation('');
+        return ' Closing the chat. You can open it again any time.';
+      }
+
+      if (/(next|continue|what'?s next|start checkout|begin checkout|help me checkout)/i.test(cmd)) {
+        promptNextWizardStep('chat');
+        updateChatbotProgress();
+        return ' Let’s keep going. I’ll guide you step by step.';
+      }
+
+      if (/(skip|skip that|skip this)/i.test(cmd)) {
+        promptNextWizardStep('chat');
+        updateChatbotProgress();
+        return ' Skipping that step. Moving on.';
+      }
+
+      const fieldAliases = {
+        email: ['email', 'e-mail', 'mail'],
+        phone: ['phone', 'mobile', 'telephone', 'contact number', 'phone number'],
+        fullName: ['full name', 'name', 'your name', 'customer name'],
+        address: ['address', 'street', 'street address', 'road'],
+        apartment: ['apartment', 'apt', 'suite', 'unit', 'flat'],
+        city: ['city', 'town'],
+        state: ['state', 'province', 'region', 'county'],
+        zipCode: ['zip', 'zip code', 'postal', 'postal code', 'postcode'],
+        country: ['country', 'nation'],
+        cardNumber: ['card number', 'credit card number', 'debit card number', 'number on card'],
+        cardName: ['cardholder name', 'name on card', 'card name'],
+        expiry: ['expiry', 'expiration', 'exp date', 'expiry date', 'expiration date'],
+        cvv: ['cvv', 'cvc', 'security code', 'card code']
+      };
+
+      const genericMatch = original.match(/(?:set|enter|type|put|fill)\s+(.+?)\s+(?:to|is|as)\s+(.+)/i) ||
+        original.match(/(?:my )?(.+?)\s+(?:is|\'s)\s+(.+)/i);
+
+      if (genericMatch) {
+        const fieldPhrase = genericMatch[1].toLowerCase().trim();
+        const valuePhrase = genericMatch[2].trim();
+        const fieldId = Object.keys(fieldAliases).find(key =>
+          fieldAliases[key].some(alias => fieldPhrase.includes(alias))
+        );
+
+        if (fieldId) {
+          if (fieldId === 'cardNumber') {
+            const digits = extractDigits(valuePhrase);
+            if (digits && digits.length >= 12) {
+              setField('cardNumber', formatCardNumber(digits));
+              updateChatbotProgress();
+              return ' Card number saved.';
+            }
+          }
+          if (fieldId === 'expiry') {
+            const expiryVal = normalizeExpiry(valuePhrase);
+            if (expiryVal) {
+              setField('expiry', expiryVal);
+              updateChatbotProgress();
+              return ` Expiry set to ${expiryVal}.`;
+            }
+          }
+          if (fieldId === 'cvv') {
+            const digits = extractDigits(valuePhrase);
+            if (digits && digits.length >= 3) {
+              setField('cvv', digits.slice(0, 4));
+              updateChatbotProgress();
+              return ' CVV saved.';
+            }
+          }
+          if (fieldId === 'country') {
+            setField('country', normalizeCountry(valuePhrase));
+            updateChatbotProgress();
+            return ' Country saved.';
+          }
+
+          setField(fieldId, valuePhrase);
+          updateChatbotProgress();
+          return ' Saved.';
+        }
+      }
+
+      // Help / capabilities
+      if (/help|what can you do|commands|options|how to use/i.test(cmd)) {
+        return ' I can fill the form, set your email, phone, address, apartment, country, and card details, check for missing fields, explain your total and shipping, change payment method, or place your order. Try: "Fill form", "Set card number", "What is my total?", "Check my form", "Change payment to PayPal", or "Place order".';
+      }
+
+      // Friendly greetings / small talk
+      if (/(^|\b)(hi|hello|hey|yo|hiya|good morning|good afternoon|good evening)(!|\b)/i.test(cmd)) {
+        return ' 👋 Hi! I am your checkout assistant. I can help you fill the form, explain your order total and shipping, check if anything is missing, change payment method, or place the order for you.';
+      }
+
+      if (/who are you|what are you|are you (a )?bot|are you real/i.test(cmd)) {
+        return ' I am an AI helper just for this checkout page. I understand natural phrases about your details, shipping, totals, and payment so you don\'t have to click everything manually.';
+      }
+
+      if (/thank(s| you)?/i.test(cmd)) {
+        return ' You\'re very welcome! If you want, I can now check your form, explain your total, or place your order.';
+      }
+
+      if (/bye|goodbye|see you|later|that\'s all|i\'m done/i.test(cmd)) {
+        return ' No problem! You can close this chat, and if you need me again just type a message or click the Chatbot button.';
+      }
+
+      if (/(go back|back to cart|open cart|return to cart|cart page)/i.test(cmd)) {
+        setTimeout(() => {
+          window.location.href = 'cart.html';
+        }, 300);
+        return ' Taking you back to your cart.';
+      }
+
+      // Auto-fill test data
+      if (/(fill|auto.?fill|complete|populate|test.?data)/i.test(cmd)) {
+        fillTestData();
+        updateChatbotProgress();
+        return ' Form filled with test data!';
+      }
+
+      // Clear form
+      if (/(clear|reset|empty|erase|delete)/i.test(cmd) && /form/i.test(cmd)) {
+        clearForm();
+        updateChatbotProgress();
+        return ' Form cleared!';
+      }
+
+      // Email parsing (natural phrases + direct addresses)
+      if (/email|e-mail|mail/i.test(cmd)) {
+        const emailMatch = original.match(/[\w\.-]+@[\w\.-]+\.\w+/i);
+        if (emailMatch) {
+          setField('email', emailMatch[0]);
+          updateChatbotProgress();
+          return ` Email set to: ${emailMatch[0]}`;
+        }
+
+        let spokenEmail = cmd
+          .replace(/\s+at\s+/g, '@')
+          .replace(/\s+dot\s+/g, '.')
+          .replace(/\s+/g, '');
+        if (spokenEmail.includes('@') && spokenEmail.includes('.')) {
+          setField('email', spokenEmail);
+          updateChatbotProgress();
+          return ` Email set to: ${spokenEmail}`;
+        }
+
+        const emailPatterns = [
+          /(?:my )?email (?:is |address is )?(.+)/i,
+          /(?:set )?email (?:to )?(.+)/i,
+          /e-?mail.+?is (.+)/i
+        ];
+        for (const p of emailPatterns) {
+          const m = original.match(p);
+          if (m && m[1]) {
+            let e = m[1].trim()
+              .replace(/\s+at\s+/gi, '@')
+              .replace(/\s+dot\s+/gi, '.')
+              .replace(/\s+/g, '');
+            setField('email', e);
+            updateChatbotProgress();
+            return ` Email set to: ${e}`;
+          }
+        }
+      }
+
+      // Phone parsing
+      if (/phone|number|mobile|telephone|contact/i.test(cmd)) {
+        const phoneMatch = original.match(/[\d\s\-\+\(\)]{8,}/);
+        if (phoneMatch) {
+          setField('phone', phoneMatch[0].trim());
+          updateChatbotProgress();
+          return ` Phone set to: ${phoneMatch[0].trim()}`;
+        }
+
+        const phonePatterns = [
+          /(?:my )?(?:phone|number|mobile) (?:is |number is )?(.+)/i,
+          /(?:set )?(?:phone|number) (?:to )?(.+)/i,
+          /call (?:me )?(?:at |on )?(.+)/i
+        ];
+        for (const p of phonePatterns) {
+          const m = original.match(p);
+          if (m && m[1]) {
+            const phone = m[1].trim();
+            setField('phone', phone);
+            updateChatbotProgress();
+            return ` Phone set to: ${phone}`;
+          }
+        }
+      }
+
+      // Name parsing
+      if (/name|called|call me/i.test(cmd)) {
+        const namePatterns = [
+          /(?:my )?name (?:is |'s )?(.+)/i,
+          /(?:i'm |i am |im )(.+)/i,
+          /call me (.+)/i,
+          /(?:this is |it's )(.+)/i
+        ];
+        for (const p of namePatterns) {
+          const m = original.match(p);
+          if (m && m[1]) {
+            let name = m[1].trim();
+            setField('fullName', name);
+            updateChatbotProgress();
+            return ` Name set to: ${name}`;
+          }
+        }
+      }
+
+      // Address
+      if (/address|street|road|house|flat/i.test(cmd)) {
+        const m = original.match(/(?:my )?address (?:is )?(.+)/i);
+        if (m && m[1]) {
+          const addr = m[1].trim();
+          setField('address', addr);
+          updateChatbotProgress();
+          return ` Address set to: ${addr}`;
+        }
+      }
+
+      if (/apartment|apt|suite|unit/i.test(cmd)) {
+        const m = original.match(/(?:apartment|apt|suite|unit) (?:is |number |no\.? |#|to )?(.+)/i);
+        if (m && m[1]) {
+          const apt = m[1].trim();
+          setField('apartment', apt);
+          updateChatbotProgress();
+          return ` Apartment set to: ${apt}`;
+        }
+      }
+
+      // City
+      if (/city|from|live in|based in/i.test(cmd)) {
+        const cityPatterns = [
+          /(?:my )?city (?:is |'s )?(.+)/i,
+          /(?:i'm |i am )?from (.+)/i,
+          /live in (.+)/i,
+          /based in (.+)/i
+        ];
+        for (const p of cityPatterns) {
+          const m = original.match(p);
+          if (m && m[1]) {
+            const city = m[1].trim();
+            setField('city', city);
+            updateChatbotProgress();
+            return ` City set to: ${city}`;
+          }
+        }
+      }
+
+      // State / region
+      if (/state|region|county/i.test(cmd)) {
+        const m = original.match(/(?:state|region|county) (?:is )?(.+)/i);
+        if (m && m[1]) {
+          const st = m[1].trim();
+          setField('state', st);
+          updateChatbotProgress();
+          return ` State set to: ${st}`;
+        }
+      }
+
+      // ZIP / postcode
+      if (/zip|postcode|postal code/i.test(cmd)) {
+        const zipMatch = original.match(/[A-Za-z0-9 ]{3,10}/);
+        if (zipMatch) {
+          const zip = zipMatch[0].trim();
+          setField('zipCode', zip);
+          updateChatbotProgress();
+          return ` Postcode set to: ${zip}`;
+        }
+      }
+
+      if (/country|nation/i.test(cmd)) {
+        const m = original.match(/(?:country|nation) (?:is |to )?(.+)/i);
+        if (m && m[1]) {
+          const country = normalizeCountry(m[1].trim());
+          setField('country', country);
+          updateChatbotProgress();
+          return ` Country set to: ${country}`;
+        }
+      }
+
+      // Order total / summary
+      if (cmd.includes('total') || cmd.includes('summary') || cmd.includes('how much') || cmd.includes('grand total') || cmd.includes('overall')) {
+        const totals = window.checkoutTotals;
+        if (totals) {
+          return ` You have ${totals.itemCount} items. Subtotal: £${totals.subtotal.toFixed(2)}, shipping: ${totals.shipping === 0 ? 'FREE' : '£' + totals.shipping.toFixed(2)}, tax: £${totals.tax.toFixed(2)}, total: £${totals.total.toFixed(2)}.`;
+        }
+        return ' I could not read your order total yet. Make sure your cart is loaded.';
+      }
+
+      // Shipping / delivery
+      if (cmd.includes('shipping') || cmd.includes('delivery') || cmd.includes('postage')) {
+        const totals = window.checkoutTotals;
+        if (totals) {
+          if (totals.shipping === 0) {
+            return ' Shipping is FREE on this order.';
+          }
+          const remaining = Math.max(0, (totals.freeShippingThreshold || 100) - totals.subtotal);
+          const extra = remaining > 0 ? ` Add £${remaining.toFixed(2)} more to unlock free shipping.` : '';
+          return ` Shipping costs £${totals.shipping.toFixed(2)}.${extra}`;
+        }
+        return ' I could not read your shipping details yet.';
+      }
+
+      // Item count
+      if (cmd.includes('items') || cmd.includes('how many')) {
+        const totals = window.checkoutTotals;
+        if (totals) {
+          return ` You currently have ${totals.itemCount} items in your order.`;
+        }
+        return ' I could not read how many items you have yet.';
+      }
+
+      // Payment method selection
+      if (
+        cmd.includes('payment') ||
+        cmd.includes('paypal') ||
+        cmd.includes('apple pay') ||
+        cmd.includes('google pay') ||
+        cmd.includes('gpay') ||
+        ((cmd.includes('card') || cmd.includes('credit') || cmd.includes('debit')) &&
+         !/(card number|cardholder|name on card|card name|expiry|expiration|cvv|cvc|security code|card code)/i.test(cmd))
+      ) {
+        if (cmd.includes('paypal')) {
+          selectPaymentMethod('paypal');
+          return ' Payment method set to PayPal.';
+        }
+        if (cmd.includes('apple pay')) {
+          selectPaymentMethod('applepay');
+          return ' Payment method set to Apple Pay.';
+        }
+        if (cmd.includes('google pay') || cmd.includes('gpay')) {
+          selectPaymentMethod('googlepay');
+          return ' Payment method set to Google Pay.';
+        }
+        if (cmd.includes('card') || cmd.includes('credit') || cmd.includes('debit')) {
+          selectPaymentMethod('card');
+          return ' Payment method set to card.';
+        }
+      }
+
+      if (/(card number|credit card number|debit card number)/i.test(cmd)) {
+        const digits = extractDigits(original);
+        if (digits && digits.length >= 12) {
+          const formatted = formatCardNumber(digits);
+          setField('cardNumber', formatted);
+          return ' Card number saved.';
+        }
+      }
+
+      if (/(name on card|cardholder name|card name)/i.test(cmd)) {
+        const m = original.match(/(?:name on card|cardholder name|card name) (?:is |to )?(.+)/i);
+        if (m && m[1]) {
+          setField('cardName', m[1].trim());
+          return ' Cardholder name saved.';
+        }
+      }
+
+      if (/(expiry|expiration|exp date|expiry date|expiration date)/i.test(cmd)) {
+        const expiry = normalizeExpiry(original);
+        if (expiry) {
+          setField('expiry', expiry);
+          return ` Expiry set to ${expiry}.`;
+        }
+      }
+
+      if (/(cvv|cvc|security code|card code)/i.test(cmd)) {
+        const digits = extractDigits(original);
+        if (digits && digits.length >= 3) {
+          setField('cvv', digits.slice(0, 4));
+          return ' CVV saved.';
+        }
+      }
+
+      // Check / validate form
+      if ((cmd.includes('check') || cmd.includes('validate') || cmd.includes('missing') || cmd.includes('verify') || cmd.includes('review')) &&
+          (cmd.includes('form') || cmd.includes('details') || cmd.includes('information') || cmd.includes('info') || cmd.includes('address') || cmd.includes('order'))) {
+        const missing = getMissingRequiredFields();
+        if (!missing.length) {
+          showChatValidation('All required fields look filled. You can place your order.');
+          updateChatbotProgress();
+          return ' All required fields look filled. You can place your order when you are ready.';
+        }
+        showChatValidation('Missing: ' + missing.slice(0, 6).join(', '));
+        updateChatbotProgress();
+        return ' You still need to fill: ' + missing.slice(0, 5).join(', ') + '.';
+      }
+
+      // Place order
+      if (/(place|submit|confirm|finish|checkout|complete|pay).*(order|purchase|payment)/i.test(cmd) ||
+          /(order|purchase|payment).*(place|submit|confirm|finish)/i.test(cmd) ||
+          cmd.includes('place order')) {
+        document.getElementById('placeOrderBtn')?.click();
+        return ' Placing your order!';
+      }
+
+      return ' I did not quite get that. I can fill the form, set contact details, set card number and expiry, explain your total and shipping, change payment method, check for missing fields, or place your order. Try: "Fill form", "Set card number", "What is my total?", "Check my form", or "Change payment to PayPal".';
+    }
+
+    function addMessage(txt, type, options = {}) {
+      const shouldPersist = options.persist !== false;
+      const messagesDiv = document.getElementById('chatbotMessages');
+      if (!messagesDiv) return;
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'chat-message ' + type;
+      msgDiv.innerHTML = `
+        <div class="message-bubble" style="
+          background: ${type === 'user' ? 'linear-gradient(135deg, #60a5fa, #a78bfa)' : 'linear-gradient(135deg, rgba(255,255,255,0.98), rgba(239,246,255,0.9))'};
+          color: ${type === 'user' ? 'white' : '#1e293b'};
+          padding: 0.875rem 1.25rem;
+          border-radius: 18px;
+          max-width: 85%;
+          ${type === 'bot' ? 'border: 1px solid rgba(99, 102, 241, 0.18); box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);' : 'box-shadow: 0 8px 20px rgba(99, 102, 241, 0.18);'}
+          margin-left: ${type === 'user' ? 'auto' : '0'};
+          margin-bottom: 0.75rem;
+        ">${txt}</div>
+      `;
+      messagesDiv.appendChild(msgDiv);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      if (shouldPersist) {
+        checkoutChatHistory.push({ txt, type });
+        if (checkoutChatHistory.length > MAX_CHECKOUT_CHAT_HISTORY) {
+          checkoutChatHistory = checkoutChatHistory.slice(-MAX_CHECKOUT_CHAT_HISTORY);
+        }
+        persistCheckoutChatHistory();
+      }
+    }
+    window.showNotification = function(msg, type = 'success') {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed; top: 100px; right: 20px;
+        background: ${type === 'success' ? '#10b981' : type === 'info' ? '#3b82f6' : '#ef4444'};
+        color: white; padding: 1rem 1.5rem; border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 10000; font-weight: 700;
+      `;
+      notification.textContent = msg;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
+    };
+    
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const hamburger = document.getElementById('hamburgerMenu');
+      const overlay = document.getElementById('mobileMenuOverlay');
+      
+      navLinks.classList.toggle('active');
+      hamburger.classList.toggle('active');
+      overlay.classList.toggle('active');
+      
+      // Prevent body scroll when menu is open
+      document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+    }
+    
+    function closeMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const hamburger = document.getElementById('hamburgerMenu');
+      const overlay = document.getElementById('mobileMenuOverlay');
+      
+      navLinks.classList.remove('active');
+      hamburger.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    
+    // Close menu when clicking on a link
+    document.addEventListener('DOMContentLoaded', function() {
+      const navLinkElements = document.querySelectorAll('.nav-links a');
+      navLinkElements.forEach(link => {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    });
+  </script>
+</body>
+</html>

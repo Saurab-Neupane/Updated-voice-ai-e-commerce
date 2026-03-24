@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About AIShop - Revolutionizing Online Shopping with AI</title>
+  
+  <meta name="description" content="Learn about AIShop's mission to revolutionize e-commerce with voice-controlled AI shopping. Discover our innovative technology and commitment to seamless online shopping experiences.">
+  <meta name="keywords" content="about AIShop, AI shopping platform, voice commerce, online shopping innovation, AI technology">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://aishop.com/about.html">
+  
+
+  <meta property="og:title" content="About AIShop - AI-Powered Shopping">
+  <meta property="og:description" content="Revolutionizing online shopping with voice AI technology.">
+  <meta property="og:url" content="https://aishop.com/about.html">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      min-height: 100vh;
+      color: #1e293b;
+      overflow-x: hidden;
+    }
+
+    .main-header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .logo {
+      font-size: 1.75rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #2563eb, #7c3aed, #db2777);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #64748b;
+      font-weight: 600;
+      transition: all 0.3s;
+      position: relative;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      transition: width 0.3s;
+      border-radius: 2px;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #2563eb;
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+    }
+
+    .header-icon-btn {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border: none;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
+    }
+
+    .header-icon-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(37, 99, 235, 0.4);
+    }
+
+    .header-icon-btn .badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ef4444;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 0.25rem 0.5rem;
+      border-radius: 10px;
+      min-width: 20px;
+      text-align: center;
+      border: 2px solid white;
+    }
+
+    .about-hero {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      padding: 5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .about-hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .about-hero h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #1e40af, #7c3aed);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+      letter-spacing: -2px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .about-hero p {
+      font-size: 1.5rem;
+      color: #64748b;
+      font-weight: 500;
+      line-height: 1.8;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+  
+    .stats-section {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      padding: 4rem 2rem;
+      margin: -3rem 0 4rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .stats-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+    }
+
+    .stat-card {
+      text-align: center;
+      color: white;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .stat-number {
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .stat-label {
+      font-size: 1.125rem;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+
+ 
+    .content-section {
+      max-width: 1200px;
+      margin: 5rem auto;
+      padding: 0 2rem;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+      font-size: 3rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #1e40af, #7c3aed);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+      letter-spacing: -1px;
+    }
+
+    .section-header p {
+      font-size: 1.25rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+ 
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2.5rem;
+      margin-bottom: 5rem;
+    }
+
+    .value-card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 24px;
+      border: 2px solid #e2e8f0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .value-card:hover {
+      transform: translateY(-10px);
+      border-color: #2563eb;
+      box-shadow: 0 20px 60px rgba(37, 99, 235, 0.2);
+    }
+
+    .value-icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .value-card h3 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 1rem;
+    }
+
+    .value-card p {
+      font-size: 1rem;
+      color: #64748b;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.5rem;
+      margin-top: 3rem;
+    }
+
+    .team-card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 2px solid #e2e8f0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .team-card:hover {
+      transform: translateY(-10px);
+      border-color: #2563eb;
+      box-shadow: 0 20px 60px rgba(37, 99, 235, 0.2);
+    }
+
+    .team-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    }
+
+    .team-info {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .team-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+
+    .team-role {
+      font-size: 1rem;
+      color: #2563eb;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 1rem;
+    }
+
+    .team-bio {
+      font-size: 0.95rem;
+      color: #64748b;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+
+    .story-section {
+      background: white;
+      border-radius: 32px;
+      padding: 4rem;
+      border: 2px solid #e2e8f0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      margin-bottom: 5rem;
+    }
+
+    .story-section h2 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #1e40af, #7c3aed);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 2rem;
+    }
+
+    .story-section p {
+      font-size: 1.125rem;
+      color: #64748b;
+      line-height: 1.9;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+
+    .cta-section {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      padding: 5rem 2rem;
+      text-align: center;
+      border-radius: 32px;
+      margin: 5rem 0;
+      box-shadow: 0 20px 60px rgba(37, 99, 235, 0.3);
+    }
+
+    .cta-section h2 {
+      font-size: 3rem;
+      font-weight: 900;
+      color: white;
+      margin-bottom: 1.5rem;
+      letter-spacing: -1px;
+    }
+
+    .cta-section p {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2.5rem;
+      font-weight: 500;
+    }
+
+    .cta-btn {
+      background: white;
+      color: #2563eb;
+      padding: 1.25rem 3rem;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 1.125rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+
+    
+    .hamburger-menu {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 1001;
+    }
+    
+    .hamburger-menu span {
+      width: 25px;
+      height: 3px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    
+    .hamburger-menu.active span:nth-child(1) {
+      transform: rotate(45deg) translate(8px, 8px);
+    }
+    
+    .hamburger-menu.active span:nth-child(2) {
+      opacity: 0;
+    }
+    
+    .hamburger-menu.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -7px);
+    }
+    
+    .mobile-menu-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .mobile-menu-overlay.active {
+      opacity: 1;
+    }
+
+    @media (max-width: 1024px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-header {
+        padding: 0.875rem 1rem;
+      }
+      
+      .logo {
+        font-size: 1.5rem;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: 0;
+        transform: translateX(110%);
+        width: 280px;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 80px 30px 30px;
+        gap: 1.5rem;
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        overflow-y: auto;
+      }
+
+      .nav-links.active {
+        transform: translateX(0);
+      }
+      
+      .nav-links a {
+        font-size: 1.1rem;
+        padding: 12px 0;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      
+      .hamburger-menu {
+        display: flex;
+      }
+      
+      .mobile-menu-overlay {
+        display: block;
+      }
+
+      .header-icon-btn {
+        font-size: 0.8rem;
+        padding: 0.625rem 1rem;
+      }
+      
+      .page-header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .page-header p {
+        font-size: 1rem;
+      }
+      
+      .about-card {
+        padding: 2rem 1.5rem;
+      }
+      
+      .about-card h3 {
+        font-size: 1.35rem;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .page-header {
+        padding: 2rem 1rem 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        font-size: 1.35rem;
+      }
+      
+      .main-header {
+        padding: 0.75rem 0.875rem;
+      }
+
+      .page-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .page-header p {
+        font-size: 0.95rem;
+      }
+      
+      .about-card {
+        padding: 1.5rem 1rem;
+      }
+      
+      .about-card h3 {
+        font-size: 1.2rem;
+      }
+      
+      .about-card p {
+        font-size: 0.95rem;
+      }
+
+      .chatbot-container {
+        width: 100vw;
+        height: 100vh;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+      }
+
+      #chatbotToggle {
+        width: 60px;
+        height: 60px;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+    
+    @media (max-width: 375px) {
+      .logo {
+        font-size: 1.2rem;
+      }
+      
+      .page-header h1 {
+        font-size: 1.75rem;
+      }
+      
+      .page-header p {
+        font-size: 0.875rem;
+      }
+      
+      .about-card {
+        padding: 1.25rem 0.875rem;
+      }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .chatbot-container {
+        height: 100vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+
+  <header class="main-header">
+    <div class="logo" onclick="window.location.href='index.html'">🛍️ AIShop</div>
+
+    <div class="hamburger-menu" id="hamburgerMenu" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="cart.html">Cart</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="about.html" class="active">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="header-icons">
+      <button class="header-icon-btn" id="themeToggle" title="Change Theme">
+        <span style="font-size: 1.3rem;">🎨</span>
+      </button>
+      
+      <button class="header-icon-btn" id="voiceBtn" title="Voice AI">
+        🎤 Voice
+      </button>
+      
+      <button class="header-icon-btn" onclick="window.location.href='wishlist.html'" title="Wishlist">
+        Wishlist <span class="badge" id="wishlistCount">0</span>
+      </button>
+      
+      <button class="header-icon-btn" onclick="window.location.href='cart.html'" title="Cart">
+        Cart <span class="badge" id="cartCount">0</span>
+      </button>
+    </div>
+  </header>
+
+
+  <section class="about-hero">
+    <div class="about-hero-content">
+      <h1>About AIShop</h1>
+      <p>Revolutionizing online shopping with AI-powered recommendations and voice assistance. We're building the future of e-commerce, one intelligent interaction at a time.</p>
+    </div>
+  </section>
+
+
+  <section class="stats-section">
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-number">50+</div>
+        <div class="stat-label">Happy Customers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">10+</div>
+        <div class="stat-label">Products</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">98%</div>
+        <div class="stat-label">Satisfaction Rate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">AI Support</div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="content-section">
+    <div class="story-section">
+      <h2>📖 Our Story</h2>
+      <p>AIShop was founded in 2025 with a simple mission: make online shopping smarter, faster, and more personalized. We believe that artificial intelligence shouldn't just be a buzzword—it should genuinely improve your shopping experience.</p>
+      <p>Our team of engineers, designers, and AI specialists worked tirelessly to create a platform that understands what you want before you even know it yourself. From voice-activated search to intelligent product recommendations, every feature is designed with you in mind.</p>
+      <p>Today, we serve thousands of customers worldwide, helping them discover products they love while saving time and making better purchasing decisions. But we're just getting started.</p>
+    </div>
+  </section>
+
+
+  <section class="content-section">
+    <div class="section-header">
+      <h2> Our Values</h2>
+      <p>The principles that guide everything we do</p>
+    </div>
+
+    <div class="values-grid">
+      <div class="value-card">
+        <span class="value-icon">🤖</span>
+        <h3>AI-First Innovation</h3>
+        <p>We leverage cutting-edge AI technology to create shopping experiences that are intuitive, personalized, and delightfully efficient.</p>
+      </div>
+
+      <div class="value-card">
+        <span class="value-icon">💙</span>
+        <h3>Customer Obsessed</h3>
+        <p>Every decision we make starts with one question: How does this benefit our customers? Your satisfaction is our north star.</p>
+      </div>
+
+      <div class="value-card">
+        <span class="value-icon">🔒</span>
+        <h3>Privacy & Security</h3>
+        <p>Your data is sacred. We employ bank-level security and never sell your personal information. Period.</p>
+      </div>
+
+      <div class="value-card">
+        <span class="value-icon">🌱</span>
+        <h3>Sustainability</h3>
+        <p>We're committed to reducing our environmental footprint through eco-friendly packaging and carbon-neutral shipping.</p>
+      </div>
+
+      <div class="value-card">
+        <span class="value-icon">⚡</span>
+        <h3>Speed & Efficiency</h3>
+        <p>Time is precious. We optimize every click, every interaction, and every delivery to respect your busy schedule.</p>
+      </div>
+
+      <div class="value-card">
+        <span class="value-icon">⭐</span>
+        <h3>Quality Over Quantity</h3>
+        <p>We curate, not clutter. Every product in our catalog meets our strict quality standards and customer satisfaction metrics.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="content-section">
+    <div class="section-header">
+      <h2>👥 Meet Our Team</h2>
+      <p>The brilliant minds behind AIShop</p>
+    </div>
+
+    <div class="team-grid">
+      <div class="team-card">
+        <img 
+          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop&q=80" 
+          alt="CEO" 
+          class="team-image" 
+          onerror="this.style.background='linear-gradient(135deg, #eff6ff, #dbeafe)'; this.alt='👤'"
+        />
+        <div class="team-info">
+          <div class="team-name">Saurab Neupane</div>
+          <div class="team-role">CEO & Founder</div>
+          <div class="team-bio">Undergraduate student with 1+ years in tech. Passionate about democratizing AI for everyone.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="cta-section">
+      <h2>Ready to Experience the Future?</h2>
+      <p>Join thousands of smart shoppers who've discovered a better way to shop online.</p>
+      <button class="cta-btn" onclick="window.location.href='products.html'">
+        <span></span>
+        <span>Start Shopping Now</span>
+      </button>
+    </div>
+  </section>
+
+  <div id="footerContainer"></div>
+  <script src="theme-toggle.js"></script>
+  <script src="voice.js"></script>
+  <script src="chatbot.js"></script>
+
+  <script>
+    function updateCounts() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      
+      document.getElementById('cartCount').textContent = cartCount;
+      document.getElementById('wishlistCount').textContent = wishlist.length;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCounts();
+
+      const themeBtn = document.getElementById('themeToggle');
+      if (themeBtn && typeof cycleTheme === 'function') {
+        themeBtn.addEventListener('click', cycleTheme);
+      }
+
+      const voiceBtn = document.getElementById('voiceBtn');
+      if (voiceBtn && typeof startVoice === 'function') {
+        voiceBtn.addEventListener('click', startVoice);
+      }
+    });
+
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(html => document.getElementById('footerContainer').innerHTML = html)
+      .catch(error => console.log('Footer error:', error));
+
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const hamburger = document.getElementById('hamburgerMenu');
+      const overlay = document.getElementById('mobileMenuOverlay');
+      
+      navLinks.classList.toggle('active');
+      hamburger.classList.toggle('active');
+      overlay.classList.toggle('active');
+      
+      // Prevent body scroll when menu is open
+      document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+    }
+    
+    function closeMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
+      const hamburger = document.getElementById('hamburgerMenu');
+      const overlay = document.getElementById('mobileMenuOverlay');
+      
+      navLinks.classList.remove('active');
+      hamburger.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    
+    // Close menu when clicking on a link
+    document.addEventListener('DOMContentLoaded', function() {
+      const navLinkElements = document.querySelectorAll('.nav-links a');
+      navLinkElements.forEach(link => {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    });
+  </script>
+</body>
+</html>

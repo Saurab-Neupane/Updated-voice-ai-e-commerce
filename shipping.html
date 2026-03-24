@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shipping & Delivery - AIShop</title>
+  <meta name="description" content="Read AIShop shipping options, delivery timelines, tracking details, and return policy information.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://aishop.com/shipping.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Shipping & Delivery - AIShop">
+  <meta property="og:description" content="Shipping times, delivery options, and return details for AIShop orders.">
+  <meta property="og:url" content="https://aishop.com/shipping.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0f172a">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f172a;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .main-header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+      font-size: 1.75rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      cursor: pointer;
+    }
+
+    .back-btn {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .back-btn:hover {
+      background: rgba(59, 130, 246, 0.2);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 1.5rem 2.5rem;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .content {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .shipping-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .shipping-card {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .shipping-card:hover {
+      border-color: rgba(59, 130, 246, 0.5);
+      transform: translateY(-10px);
+    }
+
+    .shipping-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .shipping-icon svg {
+      width: 1.8em;
+      height: 1.8em;
+    }
+
+    .shipping-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .shipping-card .price {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .shipping-card p {
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+    }
+
+    .info-section {
+      background: rgba(30, 41, 59, 0.3);
+      border-radius: 20px;
+      padding: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-section h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: #60a5fa;
+    }
+
+    .info-section p {
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .main-header {
+        padding: 0.875rem 1rem;
+      }
+      
+      .logo {
+        font-size: 1.5rem;
+      }
+      
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .logo {
+        font-size: 1.35rem;
+      }
+      
+      .main-header {
+        padding: 0.75rem 0.875rem;
+      }
+      
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+      
+      .info-section h2 {
+        font-size: 1.5rem;
+      }
+    }
+    
+    @media (max-width: 375px) {
+      .logo {
+        font-size: 1.2rem;
+      }
+      
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="main-header">
+    <div class="logo" onclick="window.location.href='index.html'">🛍️ AIShop</div>
+    <button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
+  </header>
+
+  <div class="hero">
+    <h1>🚀 Fast & Reliable Shipping</h1>
+    <p>We deliver happiness to your doorstep</p>
+  </div>
+
+  <div class="content">
+    <div class="shipping-grid">
+      <div class="shipping-card">
+        <div class="shipping-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="8" width="13" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <path d="M16 10h3l2 3v3h-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="8" cy="18" r="1.6" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="18" cy="18" r="1.6" fill="none" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+        </div>
+        <h3>Standard Shipping</h3>
+        <div class="price">FREE</div>
+        <p>On orders over £50<br/>5-7 business days</p>
+      </div>
+
+      <div class="shipping-card">
+        <div class="shipping-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M11 3L5 13h5v8l6-10h-5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <h3>Express Shipping</h3>
+        <div class="price">£9.99</div>
+        <p>Get it in 2-3 days<br/>Priority handling</p>
+      </div>
+
+      <div class="shipping-card">
+        <div class="shipping-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 6h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+            <rect x="9" y="9" width="6" height="4" rx="1" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <path d="M12 13v4m-4 0h8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+        </div>
+        <h3>Next Day</h3>
+        <div class="price">£19.99</div>
+        <p>Order before 2pm<br/>Delivered tomorrow</p>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>Shipping Information</h2>
+      <p><strong>Free Shipping:</strong> Enjoy free standard shipping on all orders over £50!</p>
+      <p><strong>Processing Time:</strong> Orders are processed within 24 hours on business days.</p>
+      <p><strong>Tracking:</strong> You'll receive a tracking number via email once your order ships.</p>
+      <p><strong>International:</strong> We ship to 150+ countries worldwide (7-14 business days).</p>
+    </div>
+
+    <div class="info-section">
+      <h2>↩️ Returns & Exchanges</h2>
+      <p><strong>30-Day Returns:</strong> Not satisfied? Return within 30 days for a full refund.</p>
+      <p><strong>Free Return Shipping:</strong> We cover return shipping costs on all eligible returns.</p>
+      <p><strong>Easy Process:</strong> Start a return from your order history or contact support.</p>
+    </div>
+  </div>
+
+  <script src="chatbot.js"></script>
+  <script>
+ 
+  
+  if (typeof toggleChatbot === 'undefined') {
+    console.error(' Chatbot not loaded!');
+  } else {
+  }
+  
+  if (typeof cycleTheme === 'undefined') {
+    console.error(' Theme toggle not loaded!');
+  } else {
+   
+  }
+</script>
+</body>
+</html>
